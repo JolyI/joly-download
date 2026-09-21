@@ -301,17 +301,12 @@ function createRow(it) {
   var barRow = document.createElement('div');
   barRow.className = 'bar-row';
   barRow.hidden = true;
-  var bar = document.createElement('div');
-  bar.className = 'bar';
-  var fill = document.createElement('i');
-  bar.appendChild(fill);
   var pctEl = document.createElement('span');
   pctEl.className = 'pct';
   var rate = document.createElement('span');
   rate.className = 'rate';
   var eta = document.createElement('span');
   eta.className = 'eta';
-  barRow.appendChild(bar);
   barRow.appendChild(pctEl);
   barRow.appendChild(rate);
   barRow.appendChild(eta);
@@ -341,7 +336,6 @@ function createRow(it) {
       eta: eta,
       time: time,
       barRow: barRow,
-      fill: fill,
       pct: pctEl,
       acts: acts
     },
@@ -564,7 +558,8 @@ function updateRow(row, it) {
     var pct = total > 0 ? Math.min(1, received / total) : 0;
     if (!isFinite(pct) || pct < 0) pct = 0;
     if (c.pct !== pct) {
-      r.fill.style.transform = 'scaleX(' + pct.toFixed(4) + ')';
+      /* 不再画横条：让佛龛里的金箔从底部涌起，涌到的高度就是进度本身 */
+      row.el.style.setProperty('--p', pct.toFixed(4));
       c.pct = pct;
     }
 
@@ -595,6 +590,13 @@ function updateRow(row, it) {
     if (c.active !== false) {
       r.barRow.hidden = true;
       c.active = false;
+    }
+
+    /* 已完成 → 金箔镀满整龛；失败/取消 → 空龛 */
+    var gild = phase === 'complete' ? 1 : 0;
+    if (c.gild !== gild) {
+      row.el.style.setProperty('--p', gild);
+      c.gild = gild;
     }
 
     var sizeDone = fmtBytes(sizeOf(it));

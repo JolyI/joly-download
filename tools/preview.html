@@ -16,8 +16,19 @@
 </svg>
 
 <header class="top">
-  <div class="brand">
-    <span class="brand-seal" aria-hidden="true">载</span>
+  <div class="top-main">
+    <span class="zaojing" aria-hidden="true"><svg viewBox="0 0 80 80">
+        <g fill="none" stroke="currentColor" stroke-width="1.3">
+          <rect x="13" y="13" width="54" height="54" rx="2" transform="rotate(45 40 40)" opacity=".45"/>
+          <rect x="21" y="21" width="38" height="38" rx="2" transform="rotate(45 40 40)" opacity=".7"/>
+          <rect x="28" y="28" width="24" height="24" rx="1.5" transform="rotate(45 40 40)"/>
+        </g>
+        <g fill="currentColor">
+          <path d="M40 30c2.5 4 3.5 7 3.5 10a3.5 3.5 0 0 1-7 0c0-3 1-6 3.5-10z"/>
+          <path d="M40 50c-2.5-4-3.5-7-3.5-10a3.5 3.5 0 0 1 7 0c0 3-1 6-3.5 10z"/>
+          <path d="M30 40c4-2.5 7-3.5 10-3.5a3.5 3.5 0 0 1 0 7c-3 0-6-1-10-3.5z"/>
+          <path d="M50 40c-4 2.5-7 3.5-10 3.5a3.5 3.5 0 0 1 0-7c3 0 6 1 10 3.5z"/>
+        </g></svg></span>
     <h1 class="title">下载内容</h1>
     <span class="ver">v1.1.0</span>
   </div>
@@ -40,12 +51,12 @@
 
 <main class="list">
   <div class="group"><span class="g-label">9月17日</span><span class="g-count">6</span></div>
-  <article class="row" data-type="video" data-state="in_progress">
+  <article class="row" data-type="video" data-state="in_progress" style="--p:0.45">
     <span class="ic-box"><svg class="ic" viewBox="0 0 24 24"><use href="#i-video"></use></svg></span>
     <div class="main">
       <div class="l1"><span class="name">产品发布会-完整版.mp4</span><span class="st">下载中</span></div>
       <div class="l2"><span class="src">cdn.example.com</span><span class="r"><span class="size">1.2 GB</span><span class="time">17:02</span></span></div>
-      <div class="bar-row"><div class="bar"><i style="transform:scaleX(0.45)"></i></div><span class="pct">45%</span><span class="rate">3.2 MB/s</span><span class="eta">剩余 2 分 10 秒</span></div>
+      <div class="bar-row"><span class="pct">45%</span><span class="rate">3.2 MB/s</span><span class="eta">剩余 2 分 10 秒</span></div>
     </div>
     <div class="acts">
       <button data-act="show"><svg class="ic" viewBox="0 0 24 24"><use href="#i-folder"></use></svg></button>
@@ -54,12 +65,12 @@
       <button data-act="erase"><svg class="ic" viewBox="0 0 24 24"><use href="#i-trash"></use></svg></button>
     </div>
   </article>
-  <article class="row" data-type="doc" data-state="complete">
+  <article class="row" data-type="doc" data-state="complete" style="--p:1">
     <span class="ic-box"><svg class="ic" viewBox="0 0 24 24"><use href="#i-doc"></use></svg></span>
     <div class="main">
       <div class="l1"><span class="name">店铺后台批量导出exportChannel.xlsx</span><span class="st">已完成</span></div>
       <div class="l2"><span class="src">xy-yueyang.oss-cn-hangzhou.aliyuncs.com</span><span class="r"><span class="size">15 KB</span><span class="time">16:07</span></span></div>
-      <div class="bar-row" hidden><div class="bar"><i style="transform:scaleX(0)"></i></div><span class="pct"></span><span class="rate"></span><span class="eta"></span></div>
+      <div class="bar-row" hidden><span class="pct"></span><span class="rate"></span><span class="eta"></span></div>
     </div>
     <div class="acts">
       <button data-act="show"><svg class="ic" viewBox="0 0 24 24"><use href="#i-folder"></use></svg></button>
@@ -68,12 +79,12 @@
       <button data-act="erase"><svg class="ic" viewBox="0 0 24 24"><use href="#i-trash"></use></svg></button>
     </div>
   </article>
-  <article class="row" data-type="app" data-state="danger">
+  <article class="row" data-type="app" data-state="danger" style="--p:0">
     <span class="ic-box"><svg class="ic" viewBox="0 0 24 24"><use href="#i-app"></use></svg></span>
     <div class="main">
       <div class="l1"><span class="name">unknown-setup.dmg</span><span class="st">已拦截</span></div>
       <div class="l2"><span class="src">dl.example.net</span><span class="r"><span class="size">88 MB</span><span class="time">15:40</span></span></div>
-      <div class="bar-row" hidden><div class="bar"><i style="transform:scaleX(0)"></i></div><span class="pct"></span><span class="rate"></span><span class="eta"></span></div>
+      <div class="bar-row" hidden><span class="pct"></span><span class="rate"></span><span class="eta"></span></div>
     </div>
     <div class="acts">
       <button data-act="show"><svg class="ic" viewBox="0 0 24 24"><use href="#i-folder"></use></svg></button>
@@ -82,12 +93,12 @@
       <button data-act="erase"><svg class="ic" viewBox="0 0 24 24"><use href="#i-trash"></use></svg></button>
     </div>
   </article>
-  <article class="row" data-type="archive" data-state="paused">
+  <article class="row" data-type="archive" data-state="paused" style="--p:0.72">
     <span class="ic-box"><svg class="ic" viewBox="0 0 24 24"><use href="#i-archive"></use></svg></span>
     <div class="main">
       <div class="l1"><span class="name">source-code.zip</span><span class="st">已暂停</span></div>
       <div class="l2"><span class="src">github.com</span><span class="r"><span class="size">240 MB</span><span class="time">15:12</span></span></div>
-      <div class="bar-row"><div class="bar"><i style="transform:scaleX(0.72)"></i></div><span class="pct">72%</span><span class="rate">—</span><span class="eta">已暂停</span></div>
+      <div class="bar-row"><span class="pct">72%</span><span class="rate">—</span><span class="eta">已暂停</span></div>
     </div>
     <div class="acts">
       <button data-act="show"><svg class="ic" viewBox="0 0 24 24"><use href="#i-folder"></use></svg></button>
@@ -96,12 +107,12 @@
       <button data-act="erase"><svg class="ic" viewBox="0 0 24 24"><use href="#i-trash"></use></svg></button>
     </div>
   </article>
-  <article class="row" data-type="image" data-state="complete" style="background:var(--row-hover)">
+  <article class="row" data-type="image" data-state="complete" style="--p:1">
     <span class="ic-box"><svg class="ic" viewBox="0 0 24 24"><use href="#i-image"></use></svg></span>
     <div class="main">
       <div class="l1"><span class="name">ic_jump-link.svg</span><span class="st">已完成</span></div>
       <div class="l2"><span class="src">assets.example.com</span><span class="r"><span class="size">1.1 KB</span><span class="time">14:49</span></span></div>
-      <div class="bar-row" hidden><div class="bar"><i style="transform:scaleX(0)"></i></div><span class="pct"></span><span class="rate"></span><span class="eta"></span></div>
+      <div class="bar-row" hidden><span class="pct"></span><span class="rate"></span><span class="eta"></span></div>
     </div>
     <div class="acts" style="opacity:1;pointer-events:auto">
       <button data-act="show"><svg class="ic" viewBox="0 0 24 24"><use href="#i-folder"></use></svg></button>
@@ -110,12 +121,12 @@
       <button data-act="erase"><svg class="ic" viewBox="0 0 24 24"><use href="#i-trash"></use></svg></button>
     </div>
   </article>
-  <article class="row" data-type="doc" data-state="interrupted">
+  <article class="row" data-type="doc" data-state="interrupted" style="--p:0">
     <span class="ic-box"><svg class="ic" viewBox="0 0 24 24"><use href="#i-doc"></use></svg></span>
     <div class="main">
       <div class="l1"><span class="name">批量导入物流服务订单确认单17896277.pdf</span><span class="st">已取消</span></div>
       <div class="l2"><span class="src">file.yueyang.xyb2b.com</span><span class="r"><span class="size">4.2 KB</span><span class="time">14:47</span></span></div>
-      <div class="bar-row" hidden><div class="bar"><i style="transform:scaleX(0)"></i></div><span class="pct"></span><span class="rate"></span><span class="eta"></span></div>
+      <div class="bar-row" hidden><span class="pct"></span><span class="rate"></span><span class="eta"></span></div>
     </div>
     <div class="acts">
       <button data-act="show"><svg class="ic" viewBox="0 0 24 24"><use href="#i-folder"></use></svg></button>

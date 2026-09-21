@@ -2,6 +2,9 @@
 # -*- coding: utf-8 -*-
 """扩展图标生成器（开发期工具，非运行时依赖）。
 纯标准库手写 PNG 编码 + 4x 超采样抗锯齿。
+
+图形 = 敦煌藻井：土红底 + 两道金线方胜箍 + 正中一支向下的箭。
+藻井是窟顶的视觉中心，箭点明"下载"。
 用法：python3 tools/gen-icons.py
 """
 import os
@@ -58,6 +61,12 @@ def in_triangle(px, py, ax, ay, bx, by, cx, cy):
     return not (has_neg and has_pos)
 
 
+def in_diamond_ring(x, y, cx, cy, r_in, r_out):
+    """方胜（旋转 45° 的正方形）的线箍：到中心的 L1 距离落在 [r_in, r_out]。"""
+    d = abs(x - cx) + abs(y - cy)
+    return r_in <= d <= r_out
+
+
 def lerp(a, b, t):
     return a + (b - a) * t
 
@@ -65,37 +74,51 @@ def lerp(a, b, t):
 def draw_icon(size):
     SS = 4
     rgba = bytearray(size * size * 4)
-    show_tray = size >= 32
+
+    # 小尺寸上三道箍会糊成一团，48 以上才画第三道
+    if size >= 48:
+        rings = ((0.400, 0.432), (0.296, 0.328), (0.192, 0.224))
+    else:
+        rings = ((0.398, 0.436), (0.288, 0.326))
 
     for py in range(size):
         for px in range(size):
             bg_count = 0
-            white_count = 0
+            gold_count = 0
             for sy in range(SS):
                 for sx in range(SS):
                     x = (px + (sx + 0.5) / SS) / size
                     y = (py + (sy + 0.5) / SS) / size
-                    bg = in_rounded_rect(x, y, 0.02, 0.02, 0.98, 0.98, 0.225)
-                    if not bg:
+                    if not in_rounded_rect(x, y, 0.02, 0.02, 0.98, 0.98, 0.225):
                         continue
                     bg_count += 1
-                    stem = in_rounded_rect(x, y, 0.435, 0.235, 0.565, 0.55, 0.022)
-                    head = in_triangle(x, y, 0.5, 0.72, 0.285, 0.515, 0.715, 0.515)
-                    tray = show_tray and in_rounded_rect(x, y, 0.255, 0.795, 0.745, 0.868, 0.036)
-                    if stem or head or tray:
-                        white_count += 1
+
+                    gold = False
+                    for r_in, r_out in rings:
+                        if in_diamond_ring(x, y, 0.5, 0.5, r_in, r_out):
+                            gold = True
+                            break
+                    if not gold:
+                        # 正中一支向下的箭
+                        if in_rounded_rect(x, y, 0.452, 0.30, 0.548, 0.53, 0.03):
+                            gold = True
+                        elif in_triangle(x, y, 0.5, 0.70, 0.35, 0.49, 0.65, 0.49):
+                            gold = True
+                    if gold:
+                        gold_count += 1
 
             i = (py * size + px) * 4
             if bg_count == 0:
                 continue
 
             alpha = bg_count / (SS * SS)
-            white_ratio = white_count / bg_count
+            gold_ratio = gold_count / bg_count
             t = (py + 0.5) / size
 
-            r = lerp(lerp(74, 10, t), 255, white_ratio)
-            g = lerp(lerp(157, 99, t), 255, white_ratio)
-            b = lerp(lerp(255, 240, t), 255, white_ratio)
+            # 土红底自上而下渐深，金线是 #e8c46a
+            r = lerp(lerp(142, 111, t), 232, gold_ratio)
+            g = lerp(lerp(58, 42, t), 196, gold_ratio)
+            b = lerp(lerp(32, 20, t), 106, gold_ratio)
 
             rgba[i] = int(round(r))
             rgba[i + 1] = int(round(g))

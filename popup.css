@@ -70,6 +70,8 @@
   --fiber-b:  rgba(140, 110, 70, 0.045);
 
   --zaojing: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cpath d='M14 2 26 14 14 26 2 14z' fill='none' stroke='%23f0d99a' stroke-width='1' opacity='.13'/%3E%3Cpath d='M14 8 20 14 14 20 8 14z' fill='none' stroke='%23f0d99a' stroke-width='1' opacity='.16'/%3E%3Ccircle cx='14' cy='14' r='1.8' fill='%23f0d99a' opacity='.22'/%3E%3C/svg%3E");
+  /* 藻井团花：放大后虚压在中轴，是整块顶栏的视觉中心 */
+  --tuanhua: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%23f0d99a' stroke-width='1.4'%3E%3Crect x='13' y='13' width='54' height='54' rx='2' transform='rotate(45 40 40)' opacity='.4'/%3E%3Crect x='21' y='21' width='38' height='38' rx='2' transform='rotate(45 40 40)' opacity='.65'/%3E%3Crect x='28' y='28' width='24' height='24' rx='1.5' transform='rotate(45 40 40)'/%3E%3C/g%3E%3Cg fill='%23f0d99a'%3E%3Cpath d='M40 30c2.5 4 3.5 7 3.5 10a3.5 3.5 0 0 1-7 0c0-3 1-6 3.5-10z'/%3E%3Cpath d='M40 50c-2.5-4-3.5-7-3.5-10a3.5 3.5 0 0 1 7 0c0 3-1 6-3.5 10z'/%3E%3Cpath d='M30 40c4-2.5 7-3.5 10-3.5a3.5 3.5 0 0 1 0 7c-3 0-6-1-10-3.5z'/%3E%3Cpath d='M50 40c-4 2.5-7 3.5-10 3.5a3.5 3.5 0 0 1 0-7c3 0 6 1 10 3.5z'/%3E%3C/g%3E%3C/svg%3E");
   --piaodai: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='8' viewBox='0 0 40 8'%3E%3Cpath d='M0 3C7 .5 11 .5 18 3S31 5.5 40 3' fill='none' stroke='%23f0d99a' stroke-width='1.6' opacity='.8'/%3E%3Cpath d='M0 5.5C7 3 11 3 18 5.5S31 8 40 5.5' fill='none' stroke='%23f0d99a' stroke-width='1' opacity='.42'/%3E%3C/svg%3E");
 
   /* 敦煌写经体以楷体最接近；只用于点题处，正文仍用无衬线保可读性 */
@@ -156,21 +158,36 @@ body {
 .sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
 .ic { width: 16px; height: 16px; flex: none; display: block; }
 
-/* ---------------- 顶部藻井带 ----------------
- * 土红底 + 金线菱格，就是敦煌藻井的做法。整条是暗的，
- * 所以里面的按钮全部改用金色系配色。 */
+/* ---------------- 顶部：藻井华盖 ----------------
+ * 敦煌藻井是整窟的视觉中心，压在正中轴线上。所以这里不再是一条扁平的标题栏，
+ * 而是：一枚放大的藻井团花虚压中轴、标题居中、操作按钮另起一行居中 ——
+ * 完全轴对称，这就是藻井的构图法。 */
 .top {
   position: relative;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 6px;
-  padding: 10px 9px 11px;
+  flex-direction: column;
+  gap: 5px;
+  padding: 9px 9px 12px;
   background-color: var(--hdr-1);
   background-image: var(--zaojing);
   background-repeat: repeat;
   background-size: 28px 28px;
-  box-shadow: inset 0 -40px 40px -30px rgba(0, 0, 0, 0.55), 0 2px 8px rgba(0, 0, 0, 0.22);
+  box-shadow: inset 0 -44px 44px -32px rgba(0, 0, 0, 0.55), 0 2px 8px rgba(0, 0, 0, 0.22);
+}
+
+.top::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 86px;
+  height: 86px;
+  transform: translate(-50%, -50%);
+  background-image: var(--tuanhua);
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.2;
+  pointer-events: none;
 }
 
 .top::after {
@@ -186,33 +203,25 @@ body {
   pointer-events: none;
 }
 
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  min-width: 0;
-  flex: 0 1 auto;
-}
-
-/* 金印：藏青底上最跳的就是金 */
-.brand-seal {
-  flex: none;
+.top-main {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
-  border-radius: 4px;
-  background: linear-gradient(180deg, #e8c46a, #c9a227);
-  color: #5a2110;
-  font-family: var(--serif);
-  font-size: 13px;
-  font-weight: 700;
-  line-height: 1;
-  box-shadow: 0 0 0 1px rgba(240, 217, 154, 0.5), 0 1px 3px rgba(0, 0, 0, 0.3);
-  transform: rotate(-4deg);
-  user-select: none;
+  gap: 7px;
+  min-width: 0;
 }
+
+/* 藻井标记：三层套叠方胜 + 中心四瓣莲，就是藻井的骨架 */
+.zaojing {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  color: #e8c46a;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4));
+}
+
+.zaojing svg { display: block; width: 100%; height: 100%; }
 
 .title {
   margin: 0;
@@ -240,7 +249,14 @@ body {
   white-space: nowrap;
 }
 
-.top-actions { display: flex; align-items: center; gap: 2px; flex: none; }
+.top-actions {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  flex: none;
+}
 
 .txt-btn,
 .icon-btn {
@@ -279,30 +295,30 @@ body {
   border-bottom: 1px solid var(--border);
 }
 
+/* 木签：石窟里挂的签牌。方角、有底，选中时底边压一道金 */
 .tab {
   appearance: none;
-  border: 1px solid transparent;
-  background: transparent;
+  border: 1px solid var(--border);
+  background: var(--bg-sub);
   color: var(--text-dim);
   font: inherit;
   font-size: 12px;
-  padding: 5px 11px;
-  border-radius: 6px;
+  padding: 4px 11px 5px;
+  border-radius: 4px;
   cursor: pointer;
   white-space: nowrap;
   transition: background 0.14s, color 0.14s, transform 0.08s;
 }
 
-.tab:hover { background: var(--hover); color: var(--text); }
+.tab:hover { background: var(--bg); color: var(--text); }
 .tab:active { transform: scale(0.95); }
 
-/* 选中 = 石青实底 */
 .tab.is-active {
   background: var(--accent);
   border-color: var(--accent);
   color: var(--accent-ink);
   font-weight: 600;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  box-shadow: inset 0 -2px 0 var(--gold);
 }
 
 /* ---------------- 搜索 ---------------- */
@@ -378,15 +394,28 @@ body {
   background: linear-gradient(90deg, var(--gold-soft), transparent 75%);
 }
 
+/* 榜题：壁画里给每铺画挂的标牌，土红底 + 金边 */
+.group .g-label {
+  background: var(--hdr-1);
+  color: var(--hdr-text);
+  border: 1px solid var(--gold);
+  border-radius: 3px;
+  padding: 1px 10px;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+}
+
+/* 件数：一枚小金印 */
 .group .g-count {
   font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0;
-  color: var(--seal-ink);
-  background: var(--seal);
+  color: #4a2410;
+  background: var(--gold);
   border-radius: 3px;
-  padding: 1px 5px;
+  padding: 1px 6px;
   font-variant-numeric: tabular-nums;
 }
 
@@ -430,18 +459,41 @@ body {
 .row:focus { outline: none; }
 .row:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 
+/* 佛龛：拱顶小龛，文件图标供在里面。
+ * 下载中时金箔从龛底涌起，涌到的高度就是进度 —— 进度不再是一根横条，
+ * 而是"这尊龛正在被贴金"，镀满即完成。 */
 .ic-box {
-  width: 30px;
-  height: 30px;
+  position: relative;
+  width: 32px;
+  height: 36px;
   flex: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 6px;
+  border-radius: 16px 16px 5px 5px;
   background: var(--bg-sub);
   color: var(--text-dim);
   box-shadow: inset 0 0 0 1px var(--border);
+  overflow: hidden;
 }
+
+.ic-box::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(242, 230, 186, 0.96), rgba(214, 172, 52, 0.96));
+  transform: scaleY(var(--p, 0));
+  transform-origin: bottom center;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .ic-box::before { transition: transform 0.35s linear; }
+}
+
+.ic-box .ic { position: relative; z-index: 1; }
 
 .row[data-type="image"]   .ic-box { color: var(--t-image); }
 .row[data-type="video"]   .ic-box { color: var(--t-video); }
@@ -473,7 +525,6 @@ body {
 .row[data-state="danger"] .st { color: var(--danger); font-weight: 700; }
 .row[data-state="scan"] .st { color: var(--warn); }
 .row[data-state="stuck"] .st { color: var(--warn); font-weight: 700; }
-.row[data-state="stuck"] .bar > i { background: var(--warn); }
 
 .row[data-state="danger"] .ic-box {
   color: var(--danger);
@@ -514,33 +565,6 @@ body {
   gap: 7px;
   margin-top: 6px;
   font-size: 11px;
-}
-
-.row .bar {
-  flex: 1 1 auto;
-  min-width: 24px;
-  height: 4px;
-  border-radius: 2px;
-  background: var(--border);
-  overflow: hidden;
-}
-
-/* 进度条：石青研磨到金 —— 矿物重彩的一次过渡 */
-.row .bar > i {
-  display: block;
-  height: 100%;
-  width: 100%;
-  border-radius: 2px;
-  background: linear-gradient(90deg, var(--accent) 0%, var(--accent) 84%, var(--gold) 100%);
-  transform-origin: left center;
-  transform: scaleX(0);
-  will-change: transform;
-}
-
-.row[data-state="paused"] .bar > i { background: var(--warn); }
-
-@media (prefers-reduced-motion: no-preference) {
-  .bar > i { transition: transform 0.18s linear; }
 }
 
 .row .pct,
