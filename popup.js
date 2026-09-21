@@ -445,6 +445,18 @@ function setDelFileMode(on) {
 }
 
 /* 只更新发生变化的字段，避免无谓的 DOM 写入与样式重算 */
+/* 刚下载完 → 盖一次章。
+ * 只在状态【从非完成变为完成】时触发：首次渲染已完成的旧记录不会满屏盖章。 */
+function stampDone(row) {
+  if (row.el.classList.contains('just-done')) return;
+  row.el.classList.add('just-done');
+  if (row.stampTimer) clearTimeout(row.stampTimer);
+  row.stampTimer = setTimeout(function () {
+    row.stampTimer = 0;
+    row.el.classList.remove('just-done');
+  }, 560);
+}
+
 function updateRow(row, it) {
   var r = row.refs;
   var c = row.cache;
@@ -490,7 +502,12 @@ function updateRow(row, it) {
 
   renderActions(row, stuck ? 'stuck' : phase);
   /* danger / scan / stuck 单独配色，不能混进普通的「下载中」「已暂停」 */
-  row.el.dataset.state = stuck ? 'stuck' : (dangerPhase(it) || stateOf(it));
+  var state = stuck ? 'stuck' : (dangerPhase(it) || stateOf(it));
+  row.el.dataset.state = state;
+
+  /* c.state 未定义 = 这行第一次渲染，此时不盖章，否则打开面板会满屏盖章 */
+  if (state === 'complete' && c.state !== undefined && c.state !== 'complete') stampDone(row);
+  c.state = state;
 
   /* ---- 状态文字：固定在第一行右侧，永不截断 ---- */
   var stText = phase === 'running' ? (stuck ? '收尾中…' : '下载中')
