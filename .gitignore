@@ -1,5 +1,6 @@
 # 打包产物（tools/ 下用 Chrome 的 --pack-extension 生成）
 build/
+dist/
 *.crx
 *.pem
 
