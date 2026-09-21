@@ -37,23 +37,57 @@
 
 <div class="search-wrap"><input id="search" placeholder="搜索文件名或来源站点"></div>
 
-<main class="list"></main>
-
-<div class="empty">
-  <svg class="empty-feitian" viewBox="6 6 94 94" aria-hidden="true">
-    <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M48 38C34 52 36 74 54 84 70 92 86 86 94 74" stroke-width="2.4" opacity=".55"/>
-      <circle cx="46" cy="26" r="13" stroke-width="1.2" opacity=".38"/>
-      <path d="M50 36C54 44 60 52 64 60" stroke-width="11"/>
-      <path d="M40 42L58 36" stroke-width="9"/>
-      <path d="M40 42C32 48 24 52 16 52" stroke-width="5.5"/>
-      <path d="M58 36C68 32 76 33 82 38" stroke-width="5"/>
-      <path d="M64 60C74 54 82 52 90 58" stroke-width="6.5"/>
-      <path d="M64 60C72 70 78 80 84 90" stroke-width="6.5"/>
-    </g>
-    <circle cx="46" cy="26" r="6.5" fill="currentColor"/>
-    <circle cx="39" cy="16" r="3" fill="currentColor"/>
-  </svg>
-  <p>还没有下载记录</p>
-</div>
+<main class="list">
+  <div class="group"><span class="g-label">今 天</span><span class="g-count">5</span></div>
+<article class="row" data-type="doc" data-state="complete" data-key="d2" style="--p:1">
+    <span class="ic-box"><svg class="ic"><use href="#i-doc"></use></svg></span>
+    <div class="main">
+      <div class="l1"><span class="name">店铺后台批量导出exportChannel.xlsx</span><span class="st">已完成</span></div>
+      <div class="l2"><span class="src">xy-yueyang.oss-cn-hangzhou.aliyuncs.com</span><span class="r"><span class="size">15 KB</span><span class="time">16:07</span></span></div>
+      <div class="bar-row" hidden><span class="pct"></span><span class="rate"></span><span class="eta"></span></div>
+    </div>
+    <div class="acts"></div>
+  </article>
+<article class="row" data-type="app" data-state="danger" data-key="d3" style="--p:0">
+    <span class="ic-box"><svg class="ic"><use href="#i-app"></use></svg></span>
+    <div class="main">
+      <div class="l1"><span class="name">unknown-setup.dmg</span><span class="st">已拦截</span></div>
+      <div class="l2"><span class="src">dl.example.net</span><span class="r"><span class="size">88 MB</span><span class="time">15:40</span></span></div>
+      <div class="bar-row" hidden><span class="pct"></span><span class="rate"></span><span class="eta"></span></div>
+    </div>
+    <div class="acts"></div>
+  </article>
+<article class="row" data-type="archive" data-state="paused" data-key="d4" style="--p:0.72">
+    <span class="ic-box"><svg class="ic"><use href="#i-archive"></use></svg></span>
+    <div class="main">
+      <div class="l1"><span class="name">source-code.zip</span><span class="st">已暂停</span></div>
+      <div class="l2"><span class="src">github.com</span><span class="r"><span class="size">172 MB / 240 MB</span><span class="time" hidden></span></span></div>
+      <div class="bar-row"><span class="pct">72%</span><span class="rate">—</span><span class="eta">已暂停</span></div>
+    </div>
+    <div class="acts"></div>
+  </article>
+<article class="row" data-type="image" data-state="complete" data-key="d5" style="--p:1">
+    <span class="ic-box"><svg class="ic"><use href="#i-image"></use></svg></span>
+    <div class="main">
+      <div class="l1"><span class="name">ic_jump-link.svg</span><span class="st">已完成</span></div>
+      <div class="l2"><span class="src">assets.example.com</span><span class="r"><span class="size">1.1 KB</span><span class="time">14:49</span></span></div>
+      <div class="bar-row" hidden><span class="pct"></span><span class="rate"></span><span class="eta"></span></div>
+    </div>
+    <div class="acts">
+      <button data-act="show"><svg class="ic"><use href="#i-folder"></use></svg></button>
+      <button data-act="open"><svg class="ic"><use href="#i-external"></use></svg></button>
+      <button data-act="copy"><svg class="ic"><use href="#i-link"></use></svg></button>
+      <button data-act="erase"><svg class="ic"><use href="#i-trash"></use></svg></button>
+    </div>
+  </article>
+<article class="row" data-type="doc" data-state="interrupted" data-key="d6" style="--p:0">
+    <span class="ic-box"><svg class="ic"><use href="#i-doc"></use></svg></span>
+    <div class="main">
+      <div class="l1"><span class="name">批量导入物流服务订单确认单17896277.pdf</span><span class="st">已取消</span></div>
+      <div class="l2"><span class="src">file.yueyang.xyb2b.com</span><span class="r"><span class="size">4.2 KB</span><span class="time">14:47</span></span></div>
+      <div class="bar-row" hidden><span class="pct"></span><span class="rate"></span><span class="eta"></span></div>
+    </div>
+    <div class="acts"></div>
+  </article>
+</main>
 </body></html>

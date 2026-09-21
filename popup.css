@@ -1,130 +1,124 @@
-/* Joly 下载 · 弹出窗样式 —— v1.1「敦煌」主题
+/* Joly 下载 · 弹出窗样式 —— v1.3「国潮」
  *
- * 设计概念：莫高窟壁画。暖砂壁面 + 石青/石绿/铅丹三种矿彩 + 金线藻井。
- * 和 v1.0「朱墨」的区别：朱墨是文人气的干净纸墨，敦煌是工匠气的矿物重彩 ——
- * 壁面有斑驳、颜色是研磨出来的矿物色、顶部是一条藻井装饰带。
+ * 设计概念：不是把敦煌纹样贴到列表上，而是换一套**构图语法**。
+ *   · 顶栏   → 中国红实块 + 同心圆藻井，900 字重标题 + 硬偏移阴影
+ *   · 筛选   → 贴纸胶囊（白底、2px 黑描边、2px 硬阴影）
+ *   · 佛龛   → 拱顶小龛，金箔从龛底涌起，涌到的高度就是进度
+ *   · 主角卡 → 正在下载的那一件抬成大卡，其余压成单行贴纸
+ *   · 榜题   → 墨底金字的标牌
  *
- * 配色分工（和 v1.0 一样严格分离，敢撞但不串味）：
- *   石青 → 交互与进度：选中、焦点、进行中
- *   石绿 → 成功
- *   铅丹 → 危险与印章
- *   金   → 纯装饰：藻井纹、飘带界栏、标题、飞天
- *   藏青 → 顶部藻井底（敦煌藻井本来就是深蓝底 + 金线）
+ * 关键实现：主角卡**就是列表里的第一行**，只多一个 .is-hero 类，
+ * 不新增 DOM、不新增更新逻辑 —— 内存与更新路径和普通行完全一致。
  *
  * 性能约定不变：零依赖、零 content script、空闲零定时器。装饰全部走 CSS 伪元素与
- * 静态背景，不新增 DOM 节点。唯一的动画是完成时的一次盖章。
+ * 静态背景。唯一的动画是完成时的一次盖章。
  */
 
 :root {
   color-scheme: light dark;
 
-  /* ——— 壁面 ——— */
-  --bg:          #ecdfc3;
-  --bg-sub:      #e0d0ad;
-  --row-hover:   #e5d6b6;
-  --text:        #3a2a16;
-  --text-dim:    #6d5636;
-  --text-faint:  #9a8058;
-  --border:      rgba(90, 62, 30, 0.24);
-  --hover:       rgba(90, 62, 30, 0.07);
-  --active:      rgba(90, 62, 30, 0.13);
+  /* ——— 纸与墨 ——— */
+  --bg:          #f7f2e7;
+  --bg-sub:      #efe8d8;
+  --card:        #ffffff;
+  --text:        #1c1712;
+  --text-dim:    #8c8072;
+  --text-faint:  #a89e90;
+  --border:      #1c1712;          /* 描边就是墨色本身 */
+  --shadow:      #1c1712;          /* 硬阴影 */
+  --hover:       rgba(28, 23, 18, 0.06);
+  --active:      rgba(28, 23, 18, 0.12);
+  --row-hover:   #fffdf7;
 
-  /* ——— 矿物重彩 ——— */
-  --accent:      #1a6b93;   /* 石青 */
-  --accent-soft: rgba(26, 107, 147, 0.15);
-  --accent-ink:  #f6efdd;
-  --seal:        #b0442a;   /* 铅丹（土红） */
-  --seal-ink:    #f6efdd;
-  --ok:          #3d7a56;   /* 石绿 */
-  --warn:        #a87a12;   /* 藤黄 */
-  --danger:      #b0442a;
-  --danger-soft: rgba(176, 68, 42, 0.15);
-  --gold:        #a8801f;
-  --gold-soft:   rgba(168, 128, 31, 0.16);
+  /* ——— 中国红 / 金 / 矿物 ——— */
+  --accent:      #1f5fa8;          /* 石青 → 交互 */
+  --accent-soft: rgba(31, 95, 168, 0.18);
+  --accent-ink:  #ffffff;
+  --seal:        #c8352a;          /* 中国红 → 印章与危险 */
+  --seal-ink:    #ffffff;
+  --ok:          #1f8f6a;          /* 石绿 → 完成 */
+  --warn:        #b8892b;          /* 赭黄 → 暂停 */
+  --danger:      #c8352a;
+  --danger-soft: rgba(200, 53, 42, 0.13);
+  --gold:        #f0c14b;
+  --gold-deep:   #d9a92e;
+  --gold-soft:   rgba(240, 193, 75, 0.3);
 
-  /* ——— 顶部藻井带（土红底 + 金线 —— 土红就是莫高窟的底色） ——— */
-  --hdr-1:      #8e3a20;
-  --hdr-2:      #6f2a14;
-  --hdr-text:   #f2dca6;
-  --hdr-dim:    rgba(242, 220, 166, 0.85);
-  --hdr-hover:  rgba(242, 220, 166, 0.15);
-  --hdr-act:    rgba(242, 220, 166, 0.27);
-  /* 土红顶栏上，铅丹不够跳，开关的"危险"态单独用一个更亮的橙红 */
-  --hdr-danger: #e05a35;
+  /* ——— 顶栏（中国红实块） ——— */
+  --hdr-1:      #c8352a;
+  --hdr-2:      #a82a20;
+  --hdr-text:   #f0c14b;
+  --hdr-dim:    #f5dfa8;
+  --hdr-hover:  rgba(255, 255, 255, 0.16);
+  --hdr-act:    rgba(255, 255, 255, 0.26);
+  --hdr-danger: #1c1712;
 
-  /* ——— 文件类型着色（全部取自矿彩） ——— */
-  --t-image: #3d7a56;
-  --t-video: #7a4a8c;
-  --t-audio: #b0442a;
-  --t-doc:   #a87a12;
-  --t-zip:   #1a6b93;
-  --t-app:   #6d5636;
+  /* ——— 文件类型着色 ——— */
+  --t-image: #1f8f6a;
+  --t-video: #6b3fa0;
+  --t-audio: #c8352a;
+  --t-doc:   #b8892b;
+  --t-zip:   #1f5fa8;
+  --t-app:   #5c5040;
 
-  --toast-bg: #33251a;
-  --toast-fg: #f0e4cc;
+  --toast-bg: #1c1712;
+  --toast-fg: #f7f2e7;
 
-  /* 壁面斑驳：大块褪色 + 细颗粒，纯静态 */
-  --blotch-a: rgba(150, 110, 60, 0.075);
-  --blotch-b: rgba(120, 90, 50, 0.06);
-  --fiber-a:  rgba(140, 110, 70, 0.07);
-  --fiber-b:  rgba(140, 110, 70, 0.045);
+  /* 榜题：浅色下墨底金字，深色下必须翻成金底墨字，否则米白底 + 金字看不清 */
+  --plate-bg: #1c1712;
+  --plate-fg: #f0c14b;
+  --plate-count-fg: #f0c14b;
 
-  --zaojing: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 28 28'%3E%3Cpath d='M14 2 26 14 14 26 2 14z' fill='none' stroke='%23f0d99a' stroke-width='1' opacity='.13'/%3E%3Cpath d='M14 8 20 14 14 20 8 14z' fill='none' stroke='%23f0d99a' stroke-width='1' opacity='.16'/%3E%3Ccircle cx='14' cy='14' r='1.8' fill='%23f0d99a' opacity='.22'/%3E%3C/svg%3E");
-  /* 藻井团花：放大后虚压在中轴，是整块顶栏的视觉中心 */
-  --tuanhua: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='%23f0d99a' stroke-width='1.4'%3E%3Crect x='13' y='13' width='54' height='54' rx='2' transform='rotate(45 40 40)' opacity='.4'/%3E%3Crect x='21' y='21' width='38' height='38' rx='2' transform='rotate(45 40 40)' opacity='.65'/%3E%3Crect x='28' y='28' width='24' height='24' rx='1.5' transform='rotate(45 40 40)'/%3E%3C/g%3E%3Cg fill='%23f0d99a'%3E%3Cpath d='M40 30c2.5 4 3.5 7 3.5 10a3.5 3.5 0 0 1-7 0c0-3 1-6 3.5-10z'/%3E%3Cpath d='M40 50c-2.5-4-3.5-7-3.5-10a3.5 3.5 0 0 1 7 0c0 3-1 6-3.5 10z'/%3E%3Cpath d='M30 40c4-2.5 7-3.5 10-3.5a3.5 3.5 0 0 1 0 7c-3 0-6-1-10-3.5z'/%3E%3Cpath d='M50 40c-4 2.5-7 3.5-10 3.5a3.5 3.5 0 0 1 0-7c3 0 6 1 10 3.5z'/%3E%3C/g%3E%3C/svg%3E");
-  --piaodai: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='8' viewBox='0 0 40 8'%3E%3Cpath d='M0 3C7 .5 11 .5 18 3S31 5.5 40 3' fill='none' stroke='%23f0d99a' stroke-width='1.6' opacity='.8'/%3E%3Cpath d='M0 5.5C7 3 11 3 18 5.5S31 8 40 5.5' fill='none' stroke='%23f0d99a' stroke-width='1' opacity='.42'/%3E%3C/svg%3E");
+  /* 藻井同心圆：顶栏右上角那组环 */
+  --rings: repeating-radial-gradient(circle at center,
+            transparent 0 7px, rgba(240, 193, 75, 0.42) 7px 9px);
 
-  /* 敦煌写经体以楷体最接近；只用于点题处，正文仍用无衬线保可读性 */
-  --serif: "Kaiti SC", "STKaiti", "KaiTi", "Songti SC", "STSong", "SimSun", serif;
-
-  --radius: 8px;
+  --radius: 9px;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    /* 暗色 = 洞窟内：壁面变深，矿彩提亮，金更亮 */
-    --bg:          #1c1610;
-    --bg-sub:      #2a2117;
-    --row-hover:   #2a2117;
-    --text:        #eddfc2;
-    --text-dim:    #ab9573;
-    --text-faint:  #7c6a4d;
-    --border:      rgba(237, 223, 194, 0.16);
-    --hover:       rgba(237, 223, 194, 0.07);
-    --active:      rgba(237, 223, 194, 0.13);
+    /* 暗色：墨底 + 米白描边，中国红与金保持不变（红金在墨底上更亮） */
+    --bg:          #17130f;
+    --bg-sub:      #221c15;
+    --card:        #241d16;
+    --text:        #f2e9d6;
+    --text-dim:    #ab9c84;
+    --text-faint:  #7c6f5c;
+    --border:      #f2e9d6;
+    --shadow:      #000000;
+    --hover:       rgba(242, 233, 214, 0.08);
+    --active:      rgba(242, 233, 214, 0.16);
+    --row-hover:   #2c241b;
 
     --accent:      #4a9dc4;
-    --accent-soft: rgba(74, 157, 196, 0.18);
+    --accent-soft: rgba(74, 157, 196, 0.2);
     --accent-ink:  #10181e;
-    --seal:        #d0563a;
-    --seal-ink:    #f6efdd;
-    --ok:          #5da97c;
-    --warn:        #d9ab35;
-    --danger:      #d0563a;
-    --danger-soft: rgba(208, 86, 58, 0.2);
-    --gold:        #d9b352;
-    --gold-soft:   rgba(217, 179, 82, 0.18);
+    --seal:        #e05a45;
+    --ok:          #35b184;
+    --warn:        #d9a92e;
+    --danger:      #e05a45;
+    --danger-soft: rgba(224, 90, 69, 0.18);
+    --gold:        #f0c14b;
+    --gold-deep:   #d9a92e;
 
-    --hdr-1:      #6b2a16;
-    --hdr-2:      #481c0e;
-    --hdr-danger: #f0704a;
+    --hdr-1:      #b8302a;
+    --hdr-2:      #8e241e;
+    --hdr-danger: #17130f;
 
-    --t-image: #5da97c;
-    --t-video: #b48ac6;
-    --t-audio: #d0563a;
-    --t-doc:   #d9ab35;
+    --t-image: #35b184;
+    --t-video: #a884d6;
+    --t-audio: #e05a45;
+    --t-doc:   #d9a92e;
     --t-zip:   #4a9dc4;
-    --t-app:   #ab9573;
+    --t-app:   #ab9c84;
 
-    --toast-bg: #eddfc2;
-    --toast-fg: #1c1610;
+    --toast-bg: #f2e9d6;
+    --toast-fg: #17130f;
 
-    --blotch-a: rgba(237, 223, 194, 0.035);
-    --blotch-b: rgba(237, 223, 194, 0.025);
-    --fiber-a:  rgba(237, 223, 194, 0.045);
-    --fiber-b:  rgba(237, 223, 194, 0.03);
-
-    --piaodai: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='8' viewBox='0 0 40 8'%3E%3Cpath d='M0 3C7 .5 11 .5 18 3S31 5.5 40 3' fill='none' stroke='%23e8c46a' stroke-width='1.6' opacity='.85'/%3E%3Cpath d='M0 5.5C7 3 11 3 18 5.5S31 8 40 5.5' fill='none' stroke='%23e8c46a' stroke-width='1' opacity='.45'/%3E%3C/svg%3E");
+    --plate-bg: #f0c14b;
+    --plate-fg: #17130f;
+    --plate-count-fg: #ffffff;
   }
 }
 
@@ -142,14 +136,7 @@ body {
   font: 13px/1.45 -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC",
         "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
   color: var(--text);
-  background-color: var(--bg);
-  background-image:
-    radial-gradient(circle at 18% 26%, var(--blotch-a) 0, transparent 42%),
-    radial-gradient(circle at 78% 62%, var(--blotch-b) 0, transparent 38%),
-    radial-gradient(circle, var(--fiber-a) 0 1px, transparent 1.3px),
-    radial-gradient(circle, var(--fiber-b) 0 1px, transparent 1.3px);
-  background-size: 100% 100%, 100% 100%, 17px 23px, 29px 31px;
-  background-position: 0 0, 0 0, 0 0, 9px 13px;
+  background: var(--bg);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -158,93 +145,70 @@ body {
 .sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
 .ic { width: 16px; height: 16px; flex: none; display: block; }
 
-/* ---------------- 顶部：藻井华盖 ----------------
- * 敦煌藻井是整窟的视觉中心，压在正中轴线上。所以这里不再是一条扁平的标题栏，
- * 而是：一枚放大的藻井团花虚压中轴、标题居中、操作按钮另起一行居中 ——
- * 完全轴对称，这就是藻井的构图法。 */
+/* ---------------- 顶栏：中国红实块 ----------------
+ * 右上角一组同心圆（藻井的简化），左下角一枚金圆。标题 900 字重 + 硬偏移阴影 ——
+ * 国潮的招牌手法：不靠渐变靠实色，不靠柔和靠硬边。 */
 .top {
   position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  padding: 9px 9px 12px;
-  background-color: var(--hdr-1);
-  background-image: var(--zaojing);
-  background-repeat: repeat;
-  background-size: 28px 28px;
-  box-shadow: inset 0 -44px 44px -32px rgba(0, 0, 0, 0.55), 0 2px 8px rgba(0, 0, 0, 0.22);
+  overflow: hidden;
+  flex: none;
+  padding: 13px 14px 12px;
+  background: var(--hdr-1);
+  border-bottom: 3px solid var(--border);
 }
 
 .top::before {
   content: "";
   position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 86px;
-  height: 86px;
-  transform: translate(-50%, -50%);
-  background-image: var(--tuanhua);
-  background-size: contain;
-  background-repeat: no-repeat;
-  opacity: 0.2;
+  right: -40px;
+  top: -50px;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: var(--rings);
   pointer-events: none;
 }
 
 .top::after {
   content: "";
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 8px;
-  background-image: var(--piaodai);
-  background-repeat: repeat-x;
-  background-size: 40px 8px;
+  left: -24px;
+  bottom: -36px;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--gold);
+  opacity: 0.28;
   pointer-events: none;
 }
 
 .top-main {
   position: relative;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 7px;
+  align-items: baseline;
+  gap: 8px;
   min-width: 0;
 }
 
-/* 藻井标记：三层套叠方胜 + 中心四瓣莲，就是藻井的骨架 */
-.zaojing {
-  flex: none;
-  width: 22px;
-  height: 22px;
-  color: #e8c46a;
-  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4));
-}
-
-.zaojing svg { display: block; width: 100%; height: 100%; }
-
 .title {
   margin: 0;
-  font-family: var(--serif);
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 1px;
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: 3px;
   color: var(--hdr-text);
+  text-shadow: 3px 3px 0 var(--shadow);
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
 }
 
 .ver {
   flex: none;
-  font-family: var(--serif);
   font-size: 10px;
-  letter-spacing: 0.4px;
-  color: var(--hdr-dim);
-  border: 1px solid rgba(240, 217, 154, 0.35);
-  border-radius: 3px;
-  padding: 0 4px;
+  font-weight: 800;
+  color: var(--hdr-1);
+  background: var(--gold);
+  border: 2px solid var(--border);
+  border-radius: 4px;
+  padding: 0 5px;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
@@ -253,24 +217,28 @@ body {
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 3px;
-  flex: none;
+  gap: 6px;
+  margin-top: 10px;
+  flex-wrap: wrap;
 }
 
+/* ---------------- 贴纸胶囊 ----------------
+ * 白底 + 2px 墨描边 + 2px 硬偏移阴影。全站的可点元素都是这一枚。 */
 .txt-btn,
 .icon-btn {
   appearance: none;
-  border: 0;
-  background: transparent;
-  color: var(--hdr-dim);
   font: inherit;
-  font-size: 12px;
-  padding: 4px 6px;
-  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--text);
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 999px;
+  padding: 2px 11px;
+  box-shadow: 2px 2px 0 var(--shadow);
   cursor: pointer;
   white-space: nowrap;
-  transition: background 0.12s, color 0.12s, transform 0.08s;
+  transition: transform 0.08s, box-shadow 0.08s, background 0.12s, color 0.12s;
 }
 
 .icon-btn {
@@ -283,74 +251,71 @@ body {
 }
 
 .txt-btn:hover,
-.icon-btn:hover { background: var(--hdr-hover); color: var(--hdr-text); }
-.txt-btn:active,
-.icon-btn:active { background: var(--hdr-act); transform: scale(0.94); }
+.icon-btn:hover { background: var(--gold); }
 
-/* ---------------- 状态筛选标签 ---------------- */
+.txt-btn:active,
+.icon-btn:active { transform: translate(2px, 2px); box-shadow: 0 0 0 var(--shadow); }
+
+/* ---------------- 状态筛选：一排贴纸胶囊 ---------------- */
 .tabs {
+  flex: none;
   display: flex;
-  gap: 3px;
-  padding: 2px 9px 8px;
-  border-bottom: 1px solid var(--border);
+  gap: 7px;
+  padding: 12px 14px 4px;
 }
 
-/* 木签：石窟里挂的签牌。方角、有底，选中时底边压一道金 */
 .tab {
   appearance: none;
-  border: 1px solid var(--border);
-  background: var(--bg-sub);
-  color: var(--text-dim);
   font: inherit;
   font-size: 12px;
-  padding: 4px 11px 5px;
-  border-radius: 4px;
+  font-weight: 800;
+  color: var(--text);
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  padding: 4px 13px;
+  box-shadow: 2px 2px 0 var(--shadow);
   cursor: pointer;
   white-space: nowrap;
-  transition: background 0.14s, color 0.14s, transform 0.08s;
+  transition: transform 0.08s, box-shadow 0.08s, background 0.12s, color 0.12s;
 }
 
-.tab:hover { background: var(--bg); color: var(--text); }
-.tab:active { transform: scale(0.95); }
+.tab:hover { background: var(--gold); }
+.tab:active { transform: translate(2px, 2px); box-shadow: 0 0 0 var(--shadow); }
 
 .tab.is-active {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: var(--accent-ink);
-  font-weight: 600;
-  box-shadow: inset 0 -2px 0 var(--gold);
+  background: var(--seal);
+  color: var(--gold);
 }
 
-/* ---------------- 搜索 ---------------- */
-.search-wrap { padding: 8px 9px; }
+/* ---------------- 搜索：贴纸输入框 ---------------- */
+.search-wrap { flex: none; padding: 11px 14px 0; }
 
 #search {
   width: 100%;
   appearance: none;
-  border: 1px solid var(--border);
-  background: var(--bg-sub);
-  color: var(--text);
   font: inherit;
   font-size: 12px;
-  padding: 6px 10px;
-  border-radius: 6px;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 9px;
+  padding: 6px 11px;
+  box-shadow: 2px 2px 0 var(--shadow);
   outline: none;
-  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+  transition: box-shadow 0.12s;
 }
 
 #search::placeholder { color: var(--text-faint); }
-#search:focus {
-  border-color: var(--accent);
-  background: var(--bg);
-  box-shadow: 0 0 0 3px var(--accent-soft);
-}
+#search:focus { box-shadow: 2px 2px 0 var(--shadow), 0 0 0 3px var(--accent-soft); }
 
 /* ---------------- 列表 ---------------- */
 .list {
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden;
-  padding: 0 4px 12px;
+  padding: 0 14px 14px;
   overscroll-behavior: contain;
 }
 
@@ -361,119 +326,90 @@ body {
   border: 3px solid transparent;
   background-clip: content-box;
   border-radius: 6px;
+  opacity: 0.4;
 }
 .list::-webkit-scrollbar-thumb:hover {
   background: var(--text-faint);
   background-clip: content-box;
 }
 
-/* 分组头：楷体 + 金线界栏 + 铅丹小印计数 */
+/* ---------------- 榜题：墨底金字的标牌 ---------------- */
 .group {
   position: sticky;
   top: 0;
   z-index: 2;
   display: flex;
   align-items: center;
-  gap: 7px;
-  padding: 13px 8px 7px;
-  font-family: var(--serif);
-  font-size: 12.5px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  color: var(--text-dim);
+  gap: 8px;
+  padding: 15px 0 9px;
   background: var(--bg);
 }
 
-.group::after {
-  content: "";
-  position: absolute;
-  left: 8px;
-  right: 8px;
-  bottom: 3px;
-  height: 1px;
-  background: linear-gradient(90deg, var(--gold-soft), transparent 75%);
-}
-
-/* 榜题：壁画里给每铺画挂的标牌，土红底 + 金边 */
 .group .g-label {
-  background: var(--hdr-1);
-  color: var(--hdr-text);
-  border: 1px solid var(--gold);
-  border-radius: 3px;
-  padding: 1px 10px;
-  font-size: 12px;
-  letter-spacing: 1.5px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+  background: var(--plate-bg);
+  color: var(--plate-fg);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 2.5px;
+  padding: 3px 12px;
+  border-radius: 5px;
+  box-shadow: 2px 2px 0 var(--seal);
 }
 
-/* 件数：一枚小金印 */
 .group .g-count {
-  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
   font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0;
-  color: #4a2410;
-  background: var(--gold);
-  border-radius: 3px;
-  padding: 1px 6px;
+  font-weight: 900;
+  color: var(--plate-count-fg);
+  background: var(--seal);
+  border: 2px solid var(--border);
+  border-radius: 5px;
+  padding: 0 6px;
   font-variant-numeric: tabular-nums;
 }
 
-/* ---------------- 下载行 ---------------- */
+/* ---------------- 下载行：单行贴纸 ----------------
+ * 结构不新增节点，靠 display:contents 把 l1/l2/bar-row 三层摊平到 .main 里，
+ * 再用 order 重排。这样 JS 完全不用改，行的 DOM 依旧是原来那套。 */
 .row {
   position: relative;
   display: flex;
   align-items: center;
-  gap: 10px;
-  min-height: 52px;
-  padding: 7px 8px 7px 10px;
+  gap: 9px;
+  min-height: 44px;
+  padding: 5px 10px;
+  background: var(--card);
+  border: 2px solid var(--border);
   border-radius: var(--radius);
+  box-shadow: 2px 2px 0 var(--shadow);
   cursor: default;
-  transition: background 0.15s;
+  margin-bottom: 7px;
+  transition: transform 0.08s, box-shadow 0.08s, background 0.12s;
   content-visibility: auto;
-  contain-intrinsic-size: auto 52px;
+  contain-intrinsic-size: auto 44px;
 }
 
-.row::before {
-  content: "";
-  position: absolute;
-  left: 1px;
-  top: 11px;
-  bottom: 11px;
-  width: 3px;
-  border-radius: 2px;
-  background: transparent;
-  transition: opacity 0.2s, background 0.2s;
+.row:hover {
+  background: var(--row-hover);
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 var(--shadow);
 }
 
-.row[data-state="in_progress"]::before { background: var(--accent); }
-.row[data-state="paused"]::before,
-.row[data-state="scan"]::before,
-.row[data-state="stuck"]::before { background: var(--warn); }
-.row[data-state="danger"]::before,
-.row[data-state="interrupted"]::before { background: var(--danger); }
-.row[data-state="complete"]::before { background: var(--ok); opacity: 0; }
-.row[data-state="complete"]:hover::before { opacity: 0.5; }
-
-.row:hover { background: var(--row-hover); }
 .row:focus { outline: none; }
-.row:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.row:focus-visible { outline: 3px solid var(--accent); outline-offset: 1px; }
 
-/* 佛龛：拱顶小龛，文件图标供在里面。
- * 下载中时金箔从龛底涌起，涌到的高度就是进度 —— 进度不再是一根横条，
- * 而是"这尊龛正在被贴金"，镀满即完成。 */
+/* 佛龛：拱顶小龛。金箔从龛底涌起，涌到的高度就是进度。 */
 .ic-box {
   position: relative;
-  width: 32px;
-  height: 36px;
+  width: 27px;
+  height: 32px;
   flex: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 16px 16px 5px 5px;
+  border-radius: 13px 13px 4px 4px;
   background: var(--bg-sub);
   color: var(--text-dim);
-  box-shadow: inset 0 0 0 1px var(--border);
+  box-shadow: inset 0 0 0 2px var(--border);
   overflow: hidden;
 }
 
@@ -484,7 +420,7 @@ body {
   right: 0;
   bottom: 0;
   height: 100%;
-  background: linear-gradient(180deg, rgba(242, 230, 186, 0.96), rgba(214, 172, 52, 0.96));
+  background: linear-gradient(180deg, #f7dc94, var(--gold-deep));
   transform: scaleY(var(--p, 0));
   transform-origin: bottom center;
 }
@@ -493,7 +429,7 @@ body {
   .ic-box::before { transition: transform 0.35s linear; }
 }
 
-.ic-box .ic { position: relative; z-index: 1; }
+.ic-box .ic { position: relative; z-index: 1; width: 14px; height: 14px; }
 
 .row[data-type="image"]   .ic-box { color: var(--t-image); }
 .row[data-type="video"]   .ic-box { color: var(--t-video); }
@@ -502,74 +438,194 @@ body {
 .row[data-type="archive"] .ic-box { color: var(--t-zip); }
 .row[data-type="app"]     .ic-box { color: var(--t-app); }
 
-.row .main { flex: 1; min-width: 0; }
+/* —— 摊平三层结构 —— */
+.row .main {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
 
-.row .l1 { display: flex; align-items: baseline; gap: 8px; }
+.row .l1,
+.row .l2,
+.row .r,
+.row .bar-row { display: contents; }
 
 .row .name {
+  order: 1;
   flex: 1 1 auto;
   min-width: 0;
-  font-size: 12.5px;
-  font-weight: 500;
+  font-size: 13px;
+  font-weight: 700;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.row .st { flex: none; font-size: 11px; font-weight: 500; white-space: nowrap; }
+.row .pct {
+  order: 2;
+  flex: none;
+  font-size: 11.5px;
+  font-weight: 900;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
 
-.row[data-state="in_progress"] .st { color: var(--accent); }
-.row[data-state="paused"] .st { color: var(--warn); }
-.row[data-state="complete"] .st { color: var(--ok); }
-.row[data-state="interrupted"] .st { color: var(--danger); }
-.row[data-state="danger"] .st { color: var(--danger); font-weight: 700; }
-.row[data-state="scan"] .st { color: var(--warn); }
-.row[data-state="stuck"] .st { color: var(--warn); font-weight: 700; }
+.row .time {
+  order: 3;
+  flex: none;
+  font-size: 10.5px;
+  font-weight: 600;
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.row .st {
+  order: 4;
+  flex: none;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  color: #fff;
+  background: var(--ok);
+  border: 2px solid var(--border);
+  border-radius: 5px;
+  padding: 0 6px;
+  white-space: nowrap;
+}
+
+.row[data-state="in_progress"] .st { background: var(--accent); }
+.row[data-state="paused"] .st,
+.row[data-state="scan"] .st,
+.row[data-state="stuck"] .st { background: var(--warn); }
+.row[data-state="interrupted"] .st,
+.row[data-state="danger"] .st { background: var(--danger); }
+
+/* 单行贴纸里不出现的字段 */
+.row .src,
+.row .size,
+.row .rate,
+.row .eta { display: none; }
 
 .row[data-state="danger"] .ic-box {
   color: var(--danger);
   background: var(--danger-soft);
-  box-shadow: inset 0 0 0 1px var(--danger);
+  box-shadow: inset 0 0 0 2px var(--danger);
 }
 
-.row .l2 {
+/* ---------------- 主角卡：正在下载的那一件 ----------------
+ * 就是列表里的第一行，多一个 .is-hero。三层结构在这里重新变回块级，
+ * 于是同一个 DOM 呈现出完全不同的层级。 */
+.row.is-hero {
+  align-items: center;
+  gap: 13px;
+  padding: 13px;
+  border-radius: 14px;
+  box-shadow: 4px 4px 0 var(--shadow);
+  margin-bottom: 10px;
+  contain-intrinsic-size: auto 132px;
+}
+
+.row.is-hero::after {
+  content: "下 载 中";
+  position: absolute;
+  right: -2px;
+  top: -2px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 9.5px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  padding: 2px 9px;
+  border: 2px solid var(--border);
+  border-radius: 0 12px 0 10px;
+}
+
+.row.is-hero .ic-box {
+  width: 58px;
+  height: 70px;
+  border-radius: 29px 29px 8px 8px;
+  box-shadow: inset 0 0 0 2px var(--border);
+}
+
+.row.is-hero .ic-box .ic { width: 25px; height: 25px; }
+
+.row.is-hero .main { display: block; }
+
+.row.is-hero .l1 { display: block; }
+.row.is-hero .l2 {
   display: flex;
   align-items: baseline;
   gap: 8px;
-  margin-top: 1px;
+  margin-top: 3px;
   font-size: 11px;
-  color: var(--text-faint);
+  color: var(--text-dim);
+}
+.row.is-hero .r { display: flex; margin-left: auto; }
+.row.is-hero .bar-row {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  margin-top: 7px;
 }
 
-.row .src {
+.row.is-hero .name {
+  display: block;
+  font-size: 14.5px;
+  font-weight: 900;
+  line-height: 1.3;
+  white-space: normal;
+  word-break: break-all;
+}
+
+.row.is-hero .src {
+  display: block;
   flex: 0 1 auto;
   min-width: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: var(--text-dim);
 }
 
-.row .r {
-  flex: none;
-  margin-left: auto;
-  display: flex;
-  align-items: baseline;
-  white-space: nowrap;
+.row.is-hero .size { display: inline; }
+.row.is-hero .time:empty { display: none; }
+.row.is-hero .r > span + span::before { content: "·"; margin: 0 5px; opacity: 0.55; }
+
+/* order 是给单行贴纸重排用的，主角卡里必须归零，
+ * 否则 45% 会被排到 rate/eta 后面 —— 大数字必须打头。 */
+.row.is-hero .pct,
+.row.is-hero .rate,
+.row.is-hero .eta,
+.row.is-hero .name,
+.row.is-hero .time { order: 0; }
+
+.row.is-hero .pct {
+  font-size: 30px;
+  font-weight: 900;
+  letter-spacing: -1.5px;
+  line-height: 1;
+  color: var(--text);
 }
 
-.row .r > span + span::before { content: "·"; margin: 0 5px; opacity: 0.55; }
+.row.is-hero .rate {
+  display: inline;
+  font-size: 12px;
+  font-weight: 900;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
 
-.row .bar-row {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  margin-top: 6px;
+.row.is-hero .eta {
+  display: block;
   font-size: 11px;
+  font-weight: 600;
+  color: var(--text-dim);
+  font-variant-numeric: tabular-nums;
 }
 
-.row .pct,
-.row .rate { flex: none; color: var(--accent); font-weight: 600; font-variant-numeric: tabular-nums; }
-.row .eta { flex: none; color: var(--text-faint); font-variant-numeric: tabular-nums; }
+.row.is-hero .st { display: none; }
 
 /* ---------------- 完成盖章 ---------------- */
 @keyframes stamp-in {
@@ -585,8 +641,9 @@ body {
 /* ---------------- 行内操作按钮 ---------------- */
 .acts {
   position: absolute;
-  right: 4px;
-  top: 5px;
+  right: 3px;
+  top: 50%;
+  transform: translateY(-50%);
   z-index: 1;
   display: flex;
   align-items: center;
@@ -595,8 +652,10 @@ body {
   border-radius: 8px;
   opacity: 0;
   pointer-events: none;
-  background: linear-gradient(to right, rgba(0, 0, 0, 0) 0, var(--row-hover) 18px);
+  background: linear-gradient(to right, rgba(255, 255, 255, 0) 0, var(--row-hover) 18px);
 }
+
+.row.is-hero .acts { top: 6px; transform: none; }
 
 .row:hover .acts,
 .row:focus-within .acts { opacity: 1; pointer-events: auto; }
@@ -628,63 +687,67 @@ body {
 .acts button[data-act="resume"]:hover,
 .acts button[data-act="retry"]:hover { color: var(--accent); }
 
-/* ---------------- 顶部「删除含文件」开关 ----------------
- * 它在暗色藻井带上，所以整套走金色系；开启时转铅丹 + 金边，
- * 在藏青底上非常跳，一眼就能看出"现在是危险模式"。 */
+/* ---------------- 「删除含文件」开关：一枚会变色的贴纸 ----------------
+ * 默认白底黑字；开启后整枚转中国红，一眼看出"现在是危险模式"。 */
 .switch {
   position: relative;
   flex: none;
   display: flex;
   align-items: center;
-  gap: 5px;
-  padding: 2px 4px;
-  border-radius: 6px;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--text);
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 999px;
+  padding: 2px 11px 2px 5px;
+  box-shadow: 2px 2px 0 var(--shadow);
   cursor: pointer;
   user-select: none;
+  white-space: nowrap;
+  transition: transform 0.08s, box-shadow 0.08s, background 0.12s, color 0.12s;
 }
 
-.switch:hover { background: var(--hdr-hover); }
+.switch:hover { background: var(--gold); }
+.switch:active { transform: translate(2px, 2px); box-shadow: 0 0 0 var(--shadow); }
 
 .switch input { position: absolute; opacity: 0; pointer-events: none; }
 
 .switch .track {
   position: relative;
   flex: none;
-  width: 26px;
-  height: 15px;
-  border-radius: 3px;
-  background: rgba(240, 217, 154, 0.26);
-  transition: background 0.15s, box-shadow 0.15s;
+  width: 24px;
+  height: 14px;
+  border-radius: 999px;
+  background: var(--bg-sub);
+  border: 2px solid var(--border);
+  transition: background 0.15s;
 }
 
 .switch .track::after {
   content: "";
   position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 11px;
-  height: 11px;
-  border-radius: 2px;
-  background: #f0d99a;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+  top: -1px;
+  left: -1px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--border);
   transition: transform 0.15s;
 }
 
-.switch .switch-label { font-size: 11px; color: var(--hdr-dim); white-space: nowrap; }
+.switch input:checked + .track { background: var(--gold); }
+.switch input:checked + .track::after { transform: translateX(10px); }
 
-.switch input:checked + .track {
-  background: var(--hdr-danger);
-  box-shadow: 0 0 0 1px rgba(242, 220, 166, 0.6);
-}
-.switch input:checked + .track::after { transform: translateX(11px); background: #f6efdd; }
-.switch input:checked ~ .switch-label { color: #ffd9a0; font-weight: 700; }
-.switch input:focus-visible + .track { outline: 2px solid var(--hdr-text); outline-offset: 2px; }
+.switch input:checked ~ .switch-label { color: var(--gold); }
+.switch:has(input:checked) { background: var(--seal); }
+
+.switch input:focus-visible + .track { outline: 3px solid var(--accent); outline-offset: 2px; }
 
 .list.del-file .acts button[data-act="erase"] { color: var(--danger); }
 
-/* ---------------- 空状态：一尊飞天 ----------------
- * 照莫高窟飞天的骨架画的：发髻 + 头光 + 块面躯干 + 一前一后两条手臂 +
- * 双腿后曳 + 一条缠绕的披帛。用 currentColor，配色交给 CSS。 */
+/* ---------------- 空状态：一尊飞天 ---------------- */
 .empty {
   flex: 1;
   display: flex;
@@ -700,8 +763,8 @@ body {
 .empty-feitian {
   width: 156px;
   height: 156px;
-  color: var(--gold);
-  opacity: 0.7;
+  color: var(--seal);
+  opacity: 0.55;
   flex: none;
 }
 
@@ -717,9 +780,10 @@ body {
   background: var(--toast-bg);
   color: var(--toast-fg);
   font-size: 12px;
+  font-weight: 700;
   padding: 7px 13px;
-  border-radius: 4px;
-  border-left: 3px solid var(--gold);
+  border-radius: 5px;
+  border-left: 4px solid var(--gold);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.32);
   pointer-events: none;
   z-index: 10;
@@ -731,6 +795,6 @@ body {
 .toast.is-danger {
   background: var(--seal);
   color: var(--seal-ink);
-  font-weight: 700;
-  border-left-color: transparent;
+  font-weight: 800;
+  border-left-color: var(--gold);
 }

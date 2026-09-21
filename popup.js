@@ -707,6 +707,22 @@ function buildEntries() {
 /* keyed 增量对齐：复用已有节点，只增删差异部分。
  * 前向对齐后，未被复用的节点必然聚在列表尾部，直接清尾并同步清理
  * nodeById，确保被移除节点的 DOM 与数据可被 GC 回收。 */
+/* 主角卡选谁：列表里第一条"还在跑"的下载（进行中 / 已暂停 / 安全扫描）。
+ * 被拦截的不算 —— 它在等用户在原生界面点「保留」，不是真的在下。 */
+var heroKey = null;
+
+function pickHero(entries) {
+  for (var i = 0; i < entries.length; i++) {
+    if (entries[i].kind !== 'row') continue;
+    var it = entries[i].item;
+    var s = stateOf(it);
+    if (s !== 'in_progress' && s !== 'paused') continue;
+    if (dangerPhase(it) === 'danger') continue;
+    return entries[i].key;
+  }
+  return null;
+}
+
 function renderView(entries) {
   var prevEl = null;
 
@@ -716,8 +732,17 @@ function renderView(entries) {
     if (!node) {
       node = e.kind === 'group' ? createGroup(e) : createRow(e.item);
     }
-    if (e.kind === 'group') updateGroup(node, e);
-    else updateRow(node, e.item);
+    if (e.kind === 'group') {
+      updateGroup(node, e);
+    } else {
+      updateRow(node, e.item);
+      /* 主角卡就是这一行，只多一个 class —— 不新增 DOM，不新增更新路径 */
+      var isHero = e.key === heroKey;
+      if (node.cache.hero !== isHero) {
+        node.el.classList.toggle('is-hero', isHero);
+        node.cache.hero = isHero;
+      }
+    }
 
     var el = node.el;
     var anchor = prevEl ? prevEl.nextSibling : listEl.firstChild;
@@ -753,6 +778,7 @@ function scheduleIdle(fn) {
 
 function render() {
   var entries = buildEntries();
+  heroKey = pickHero(entries);
   cancelRest();
 
   var matched = 0;
