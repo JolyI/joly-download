@@ -1,0 +1,15 @@
+# 打包产物（tools/ 下用 Chrome 的 --pack-extension 生成）
+build/
+*.crx
+*.pem
+
+# 临时校验目录
+.tmpcheck/
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 编辑器
+.vscode/
+.idea/

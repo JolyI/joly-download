@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+  "name": "Joly 下载",
+  "version": "0.5.1",
+  "description": "Joly 下载：用弹出面板查看和管理下载文件，一键在文件夹中显示。",
+  "homepage_url": "https://github.com/JolyI/joly-download",
+  "minimum_chrome_version": "116",
+  "permissions": [
+    "downloads",
+    "downloads.open",
+    "downloads.ui",
+    "storage",
+    "notifications"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Joly 下载",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png"
+    }
+  },
+  "options_page": "options.html",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
