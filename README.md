@@ -1,5 +1,9 @@
 # Joly 下载 · Joly Download
 
+<p align="center">
+  <img src="docs/panel.png" alt="Joly 下载面板" width="380">
+</p>
+
 用点击工具栏图标弹出的面板替代 `chrome://downloads`。**低内存是硬约束**：面板关闭即销毁、内存归零，空闲零 CPU、零定时器。
 
 | | |
@@ -161,6 +165,7 @@ Chrome 菜单 → 更多工具 → 任务管理器（Shift+Esc），观察扩展
     options.html         设置页
     options.js           设置页逻辑（只读写少量设置项）
     icons/               扩展图标
+    docs/panel.png       面板截图
     tools/gen-icons.py   图标生成器（开发期工具，非运行时依赖）
     README.md            本文件
     需求文档.md           需求与设计文档
