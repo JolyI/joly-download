@@ -187,6 +187,7 @@ Chrome 菜单 → 更多工具 → 任务管理器（Shift+Esc），观察扩展
     docs/panel.png       面板截图
     tools/gen-icons.py   图标生成器（开发期工具，非运行时依赖）
     README.md            本文件
+    CHANGELOG.md         更新日志（每个版本都打了 tag）
     需求文档.md           需求与设计文档
     .gitignore           忽略打包产物与临时目录
     LICENSE              开源协议
