@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8"><title>仙宫 + 新图标</title>
+<style>
+:root { --ground:#eef3f7; --surface:#fff; --ink:#1a1f2b; --ink-2:#5b6b82; --ink-3:#97a4b6;
+  --line:rgba(26,31,43,.09); --spirit:#2fb8b0; --glow:rgba(47,184,176,.20); --gold:#b08a34; --cinnabar:#b8462f; }
+* { box-sizing:border-box; }
+body { margin:0; padding:22px 24px 30px; background:#e4e7ea;
+  font:13px/1.5 -apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif; -webkit-font-smoothing:antialiased; }
+.sprite { position:absolute; width:0; height:0; }
+.ic { width:15px; height:15px; display:block; }
+.rowwrap { display:flex; gap:20px; align-items:flex-start; }
+.case > .cap { padding:0 2px 9px; } .case > .cap b { font-size:13px; font-weight:800; }
+.case > .cap span { display:block; font-size:11px; color:#6d7a8b; }
+
+.pane { position:relative; width:380px; height:560px; display:flex; flex-direction:column; overflow:hidden;
+  color:var(--ink); background:var(--ground); border-radius:10px; box-shadow:0 2px 10px rgba(0,0,0,.12); }
+.pane > *:not(.bg-palace) { position:relative; z-index:1; }
+.bg-palace { position:absolute; left:0; right:0; bottom:0; width:100%; height:150px; color:var(--ink); opacity:.07; z-index:0; pointer-events:none; }
+.pane.full { background:linear-gradient(180deg,#e9f1f4 0%,#f7fbfc 62%); }
+.pane.dk { --ground:#0b0e14; --surface:#141a26; --ink:#e8eef7; --ink-2:#93a3bb; --ink-3:#5f6d84;
+  --line:rgba(232,238,247,.10); --spirit:#4fd8cf; --glow:rgba(79,216,207,.22); --gold:#d8b45e; --cinnabar:#e0664a; }
+.pane.dk.full { background:linear-gradient(180deg,#0c1018 0%,#0a0d13 70%); }
+.pane.dk .bg-palace { opacity:.18; }
+
+.top { position:relative; flex:none; padding:15px 18px 34px; overflow:hidden; }
+.top .shan { position:absolute; left:0; right:0; bottom:0; width:100%; height:58px; color:var(--ink);
+  opacity:.11; pointer-events:none; }
+.top-in { position:relative; display:flex; align-items:baseline; gap:9px; }
+.title { margin:0; font-size:21px; font-weight:800; letter-spacing:4px; }
+/* 两字私印：竖长方，字上下排 */
+.seal { align-self:center; width:19px; height:23px; border-radius:3.5px; background:var(--cinnabar); color:#fff;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px; flex:none; line-height:1; }
+.seal b { font-size:9px; font-weight:700; letter-spacing:0; }
+.ver { font-size:10px; font-weight:600; color:var(--ink-3); }
+.acts { margin-left:auto; display:flex; align-items:center; gap:4px; }
+.act { appearance:none; font:inherit; font-size:11px; font-weight:500; color:var(--ink-2);
+  background:transparent; border:0; padding:3px 7px; border-radius:6px; cursor:pointer; }
+.act.on { color:var(--cinnabar); font-weight:700; }
+.hair { height:1px; background:var(--line); margin:0 18px; }
+.tabs { flex:none; display:flex; gap:18px; padding:14px 18px 0; }
+.tab { appearance:none; font:inherit; font-size:12px; font-weight:500; color:var(--ink-3);
+  background:transparent; border:0; padding:0 0 5px; cursor:pointer; position:relative; }
+.tab.is-active { color:var(--ink); font-weight:700; }
+.tab.is-active::after { content:""; position:absolute; left:0; right:0; bottom:0; height:2px; background:var(--spirit); border-radius:1px; }
+.srch { flex:none; padding:14px 18px 0; }
+.srch input { width:100%; appearance:none; font:inherit; font-size:12px; color:var(--ink); background:transparent;
+  border:0; border-bottom:1px solid var(--line); padding:5px 0; outline:none; }
+.srch input::placeholder { color:var(--ink-3); }
+.list { flex:1; overflow-y:auto; padding:0 18px 16px; }
+.gp { display:flex; align-items:center; gap:9px; padding:18px 0 8px; position:sticky; top:0; background:var(--ground); z-index:2; }
+.pane.full .gp { background:transparent; }
+.gp b { font-size:11px; font-weight:700; letter-spacing:2px; color:var(--ink-2); }
+.gp i { font-size:10px; font-style:normal; color:var(--ink-3); }
+.gp .rule { flex:1; height:1px; background:linear-gradient(90deg,var(--line),transparent); }
+.ring { position:relative; flex:none; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  background:conic-gradient(from -90deg, var(--spirit) calc(var(--p)*1turn), var(--line) 0); }
+.ring::before { content:""; position:absolute; inset:2px; border-radius:50%; background:var(--ground); }
+.ring .ic { position:relative; z-index:1; color:var(--ink-2); }
+.ring.r-sm { width:30px; height:30px; } .ring.r-lg { width:62px; height:62px; }
+.ring.r-lg::before { inset:3px; } .ring.r-lg .ic { width:24px; height:24px; }
+.ring.s-ok { background:conic-gradient(var(--gold) 1turn,var(--gold) 0); } .ring.s-ok .ic { color:var(--gold); }
+.ring.s-warn { background:conic-gradient(from -90deg, var(--ink-3) calc(var(--p)*1turn), var(--line) 0); }
+.ring.s-bad { background:conic-gradient(var(--cinnabar) 1turn,var(--cinnabar) 0); } .ring.s-bad .ic { color:var(--cinnabar); }
+.ring.s-live { box-shadow:0 0 0 4px var(--glow), 0 0 22px 2px var(--glow); } .ring.s-live .ic { color:var(--spirit); }
+.row { display:flex; align-items:center; gap:13px; padding:9px 0; border-bottom:1px solid var(--line); }
+.row:last-child { border-bottom:0; }
+.row .nm { flex:1; min-width:0; margin:0; font-size:13px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.row .tm { flex:none; font-size:11px; color:var(--ink-3); }
+.row.is-hero { gap:16px; margin:6px 0 4px; padding:16px 15px; border:0; border-radius:14px; background:var(--surface);
+  box-shadow:0 0 0 1px var(--line), 0 10px 34px -10px var(--glow), 0 3px 12px -5px rgba(20,30,50,.14); }
+.row.is-hero .hd { flex:1; min-width:0; }
+.row.is-hero .nm { font-size:14px; font-weight:700; line-height:1.35; white-space:normal; word-break:break-all; }
+.row.is-hero .sub { margin:3px 0 0; font-size:11px; color:var(--ink-3); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.row.is-hero .sub .dot { display:inline-block; width:3px; height:3px; border-radius:50%; background:var(--ink-3); vertical-align:middle; margin:0 6px; opacity:.6; }
+.row.is-hero .big { margin:8px 0 0; display:flex; align-items:baseline; gap:2px; }
+.row.is-hero .big b { font-size:32px; font-weight:800; letter-spacing:-1.5px; line-height:1; }
+.row.is-hero .big i { font-size:14px; font-weight:700; font-style:normal; color:var(--ink-3); }
+.row.is-hero .big em { font-size:12px; font-style:normal; font-weight:600; color:var(--spirit); margin-left:8px; }
+.row.is-hero .eta { margin:3px 0 0; font-size:11px; color:var(--ink-3); }
+.row.is-hero .ring::before { background:var(--surface); }
+
+.icons { display:flex; gap:12px; flex-wrap:wrap; margin-top:30px; }
+.icell { width:100px; display:flex; flex-direction:column; align-items:center; gap:7px; padding:14px 6px 11px;
+  background:var(--ground); border:1px solid #dbe1e8; border-radius:10px; }
+.icell .big { width:40px; height:40px; color:#1a1f2b; }
+.icell .big .ic { width:40px; height:40px; }
+.icell b { font-size:10.5px; font-weight:700; }
+h2 { font-size:12px; font-weight:800; letter-spacing:2.5px; color:#7d8a9c; margin:30px 0 14px;
+     padding-bottom:8px; border-bottom:1px solid #d5dbe3; }
+</style>
+</head><body>
+<svg class="sprite" xmlns="http://www.w3.org/2000/svg"><symbol id="i-file" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"><path d="M13.6 2.8H7.4A2.6 2.6 0 0 0 4.8 5.4v13.2a2.6 2.6 0 0 0 2.6 2.6h9.2a2.6 2.6 0 0 0 2.6-2.6V8.4z"/><path d="M13.6 2.8v4.3a1.3 1.3 0 0 0 1.3 1.3h4.3"/></g></symbol>
+<symbol id="i-doc" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"><path d="M13.6 2.8H7.4A2.6 2.6 0 0 0 4.8 5.4v13.2a2.6 2.6 0 0 0 2.6 2.6h9.2a2.6 2.6 0 0 0 2.6-2.6V8.4z"/><path d="M13.6 2.8v4.3a1.3 1.3 0 0 0 1.3 1.3h4.3"/><path d="M8.4 13h7.2M8.4 16.6h4.6"/></g></symbol>
+<symbol id="i-image" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"><rect x="2.8" y="4" width="18.4" height="16" rx="3"/><circle cx="8.6" cy="9.6" r="1.7"/><path d="M3.4 17.8l4.7-5.3 3.1 3.3 2.6-2.7 4.4 4.4"/></g></symbol>
+<symbol id="i-video" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"><rect x="2.6" y="4.6" width="18.8" height="14.8" rx="3.2"/><path d="M10.2 9.2l5.1 2.8-5.1 2.8z"/></g></symbol>
+<symbol id="i-audio" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"><path d="M9.2 17.4V6.6l9.6-2.1v10.8"/><circle cx="6.6" cy="17.8" r="2.6"/><circle cx="16.2" cy="15.3" r="2.6"/></g></symbol>
+<symbol id="i-archive" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"><rect x="2.8" y="3.8" width="18.4" height="4.4" rx="2"/><path d="M5.2 8.2v9.4a2.6 2.6 0 0 0 2.6 2.6h8.4a2.6 2.6 0 0 0 2.6-2.6V8.2"/><path d="M10.2 12.4h3.6"/></g></symbol>
+<symbol id="i-app" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round"><rect x="2.6" y="4" width="18.8" height="16" rx="3.2"/><path d="M2.6 8.6h18.8"/><path d="M6.8 12.4l2.6 2.6-2.6 2.6"/><path d="M12.4 17.6h4.8"/></g></symbol></svg>
+<div class="rowwrap">
+  <div class="case"><div class="cap"><b>仙宫顶栏 · 月白</b><span>飞檐翘角的天际线，替掉远山</span></div><div class="pane">
+  
+  <header class="top">
+    <svg class="shan" viewBox="0 0 380 62" preserveAspectRatio="none"><rect x="177.0" y="44" width="26" height="0.0"/><path d="M159.0 44.0 Q177.0 42.5 190.0 33.0 Q203.0 42.5 221.0 44.0 Z"/><rect x="157.0" y="42.6" width="66.0" height="2.8" rx="1.4"/><rect x="180.5" y="31" width="19" height="0.0"/><path d="M166.0 31.0 Q179.9 29.6 190.0 21.0 Q200.1 29.6 214.0 31.0 Z"/><rect x="164.0" y="29.6" width="52.0" height="2.8" rx="1.4"/><rect x="184.0" y="19" width="12" height="43.0"/><path d="M173.0 19.0 Q182.9 17.7 190.0 10.0 Q197.1 17.7 207.0 19.0 Z"/><rect x="171.0" y="17.6" width="38.0" height="2.8" rx="1.4"/><rect x="105.0" y="47" width="14" height="0.0"/><path d="M94.0 47.0 Q104.4 45.7 112.0 38.0 Q119.6 45.7 130.0 47.0 Z"/><rect x="92.0" y="45.6" width="40.0" height="2.8" rx="1.4"/><rect x="107.5" y="35" width="9" height="27.0"/><path d="M99.0 35.0 Q106.5 33.9 112.0 27.0 Q117.5 33.9 125.0 35.0 Z"/><rect x="97.0" y="33.6" width="30.0" height="2.8" rx="1.4"/><rect x="261.0" y="47" width="14" height="0.0"/><path d="M250.0 47.0 Q260.4 45.7 268.0 38.0 Q275.6 45.7 286.0 47.0 Z"/><rect x="248.0" y="45.6" width="40.0" height="2.8" rx="1.4"/><rect x="263.5" y="35" width="9" height="27.0"/><path d="M255.0 35.0 Q262.5 33.9 268.0 27.0 Q273.5 33.9 281.0 35.0 Z"/><rect x="253.0" y="33.6" width="30.0" height="2.8" rx="1.4"/><rect x="41.5" y="50" width="9" height="12.0"/><path d="M33.0 50.0 Q40.5 49.0 46.0 43.0 Q51.5 49.0 59.0 50.0 Z"/><rect x="31.0" y="48.6" width="30.0" height="2.8" rx="1.4"/><rect x="329.5" y="50" width="9" height="12.0"/><path d="M321.0 50.0 Q328.5 49.0 334.0 43.0 Q339.5 49.0 347.0 50.0 Z"/><rect x="319.0" y="48.6" width="30.0" height="2.8" rx="1.4"/><path d="M190 10V4" stroke-width="1.5"/><circle cx="190" cy="3" r="1.8"/></svg>
+    <div class="top-in"><h1 class="title">下载</h1>
+      <span class="seal"><b>安</b><b>辉</b></span>
+      <span class="ver">v1.4.0</span>
+      <div class="acts"><button class="act on">含文件</button><button class="act">按日期</button><button class="act">清空</button><button class="act"><svg class="ic"><use href="#i-settings"></use></svg></button></div></div>
+  </header>
+  <div class="hair"></div>
+  <nav class="tabs"><button class="tab is-active">全部</button><button class="tab">进行中</button><button class="tab">已完成</button><button class="tab">失败</button></nav>
+  <div class="srch"><input placeholder="搜索文件名或来源站点"></div>
+  <main class="list"><div class="gp"><b>今 天</b><i>6</i><span class="rule"></span></div><article class="row is-hero"><span class="ring r-lg s-live" style="--p:0.45"><svg class="ic"><use href="#i-video"></use></svg></span>
+      <div class="hd"><p class="nm">产品发布会-完整版.mp4</p><p class="sub">cdn.example.com<span class="dot"></span>460 MB / 1.2 GB</p>
+      <p class="big"><b>45</b><i>%</i><em>3.2 MB/s</em></p><p class="eta">剩余 2 分 10 秒</p></div></article><article class="row"><span class="ring r-sm s-ok" style="--p:1"><svg class="ic"><use href="#i-doc"></use></svg></span><p class="nm">店铺后台批量导出exportChannel.xlsx</p><span class="tm">16:07</span></article><article class="row"><span class="ring r-sm s-bad" style="--p:0"><svg class="ic"><use href="#i-app"></use></svg></span><p class="nm">unknown-setup.dmg</p><span class="tm">15:40</span></article><article class="row"><span class="ring r-sm s-warn" style="--p:0.72"><svg class="ic"><use href="#i-archive"></use></svg></span><p class="nm">source-code.zip</p><span class="tm">15:32</span></article><article class="row"><span class="ring r-sm s-ok" style="--p:1"><svg class="ic"><use href="#i-image"></use></svg></span><p class="nm">ic_jump-link.svg</p><span class="tm">14:49</span></article><article class="row"><span class="ring r-sm s-ok" style="--p:1"><svg class="ic"><use href="#i-audio"></use></svg></span><p class="nm">会议录音-最终版.m4a</p><span class="tm">14:20</span></article></main>
+</div></div>
+  <div class="case"><div class="cap"><b>仙宫顶栏 · 玄夜</b><span>灵青辉光在暗底才成立</span></div><div class="pane dk">
+  
+  <header class="top">
+    <svg class="shan" viewBox="0 0 380 62" preserveAspectRatio="none"><rect x="177.0" y="44" width="26" height="0.0"/><path d="M159.0 44.0 Q177.0 42.5 190.0 33.0 Q203.0 42.5 221.0 44.0 Z"/><rect x="157.0" y="42.6" width="66.0" height="2.8" rx="1.4"/><rect x="180.5" y="31" width="19" height="0.0"/><path d="M166.0 31.0 Q179.9 29.6 190.0 21.0 Q200.1 29.6 214.0 31.0 Z"/><rect x="164.0" y="29.6" width="52.0" height="2.8" rx="1.4"/><rect x="184.0" y="19" width="12" height="43.0"/><path d="M173.0 19.0 Q182.9 17.7 190.0 10.0 Q197.1 17.7 207.0 19.0 Z"/><rect x="171.0" y="17.6" width="38.0" height="2.8" rx="1.4"/><rect x="105.0" y="47" width="14" height="0.0"/><path d="M94.0 47.0 Q104.4 45.7 112.0 38.0 Q119.6 45.7 130.0 47.0 Z"/><rect x="92.0" y="45.6" width="40.0" height="2.8" rx="1.4"/><rect x="107.5" y="35" width="9" height="27.0"/><path d="M99.0 35.0 Q106.5 33.9 112.0 27.0 Q117.5 33.9 125.0 35.0 Z"/><rect x="97.0" y="33.6" width="30.0" height="2.8" rx="1.4"/><rect x="261.0" y="47" width="14" height="0.0"/><path d="M250.0 47.0 Q260.4 45.7 268.0 38.0 Q275.6 45.7 286.0 47.0 Z"/><rect x="248.0" y="45.6" width="40.0" height="2.8" rx="1.4"/><rect x="263.5" y="35" width="9" height="27.0"/><path d="M255.0 35.0 Q262.5 33.9 268.0 27.0 Q273.5 33.9 281.0 35.0 Z"/><rect x="253.0" y="33.6" width="30.0" height="2.8" rx="1.4"/><rect x="41.5" y="50" width="9" height="12.0"/><path d="M33.0 50.0 Q40.5 49.0 46.0 43.0 Q51.5 49.0 59.0 50.0 Z"/><rect x="31.0" y="48.6" width="30.0" height="2.8" rx="1.4"/><rect x="329.5" y="50" width="9" height="12.0"/><path d="M321.0 50.0 Q328.5 49.0 334.0 43.0 Q339.5 49.0 347.0 50.0 Z"/><rect x="319.0" y="48.6" width="30.0" height="2.8" rx="1.4"/><path d="M190 10V4" stroke-width="1.5"/><circle cx="190" cy="3" r="1.8"/></svg>
+    <div class="top-in"><h1 class="title">下载</h1>
+      <span class="seal"><b>安</b><b>辉</b></span>
+      <span class="ver">v1.4.0</span>
+      <div class="acts"><button class="act on">含文件</button><button class="act">按日期</button><button class="act">清空</button><button class="act"><svg class="ic"><use href="#i-settings"></use></svg></button></div></div>
+  </header>
+  <div class="hair"></div>
+  <nav class="tabs"><button class="tab is-active">全部</button><button class="tab">进行中</button><button class="tab">已完成</button><button class="tab">失败</button></nav>
+  <div class="srch"><input placeholder="搜索文件名或来源站点"></div>
+  <main class="list"><div class="gp"><b>今 天</b><i>6</i><span class="rule"></span></div><article class="row is-hero"><span class="ring r-lg s-live" style="--p:0.45"><svg class="ic"><use href="#i-video"></use></svg></span>
+      <div class="hd"><p class="nm">产品发布会-完整版.mp4</p><p class="sub">cdn.example.com<span class="dot"></span>460 MB / 1.2 GB</p>
+      <p class="big"><b>45</b><i>%</i><em>3.2 MB/s</em></p><p class="eta">剩余 2 分 10 秒</p></div></article><article class="row"><span class="ring r-sm s-ok" style="--p:1"><svg class="ic"><use href="#i-doc"></use></svg></span><p class="nm">店铺后台批量导出exportChannel.xlsx</p><span class="tm">16:07</span></article><article class="row"><span class="ring r-sm s-bad" style="--p:0"><svg class="ic"><use href="#i-app"></use></svg></span><p class="nm">unknown-setup.dmg</p><span class="tm">15:40</span></article><article class="row"><span class="ring r-sm s-warn" style="--p:0.72"><svg class="ic"><use href="#i-archive"></use></svg></span><p class="nm">source-code.zip</p><span class="tm">15:32</span></article><article class="row"><span class="ring r-sm s-ok" style="--p:1"><svg class="ic"><use href="#i-image"></use></svg></span><p class="nm">ic_jump-link.svg</p><span class="tm">14:49</span></article><article class="row"><span class="ring r-sm s-ok" style="--p:1"><svg class="ic"><use href="#i-audio"></use></svg></span><p class="nm">会议录音-最终版.m4a</p><span class="tm">14:20</span></article></main>
+</div></div>
+  <div class="case"><div class="cap"><b>整幅仙宫 · 玄夜</b><span>宫阙压底 + 云海，整个面板都有纵深</span></div><div class="pane dk full">
+  <svg class="bg-palace" viewBox="0 0 380 150" preserveAspectRatio="none"><rect x="173.0" y="96" width="34" height="0.0"/><path d="M150.0 96.0 Q173.2 94.2 190.0 83.0 Q206.8 94.2 230.0 96.0 Z"/><rect x="148.0" y="94.6" width="84.0" height="2.8" rx="1.4"/><rect x="177.0" y="70" width="26" height="0.0"/><path d="M158.0 70.0 Q176.6 68.3 190.0 58.0 Q203.4 68.3 222.0 70.0 Z"/><rect x="156.0" y="68.6" width="68.0" height="2.8" rx="1.4"/><rect x="181.0" y="46" width="18" height="104.0"/><path d="M166.0 46.0 Q179.9 44.5 190.0 35.0 Q200.1 44.5 214.0 46.0 Z"/><rect x="164.0" y="44.6" width="52.0" height="2.8" rx="1.4"/><rect x="95.0" y="118" width="18" height="0.0"/><path d="M81.0 118.0 Q94.3 116.6 104.0 108.0 Q113.7 116.6 127.0 118.0 Z"/><rect x="79.0" y="116.6" width="50.0" height="2.8" rx="1.4"/><rect x="98.0" y="96" width="12" height="54.0"/><path d="M87.0 96.0 Q96.9 94.7 104.0 87.0 Q111.1 94.7 121.0 96.0 Z"/><rect x="85.0" y="94.6" width="38.0" height="2.8" rx="1.4"/><rect x="267.0" y="118" width="18" height="0.0"/><path d="M253.0 118.0 Q266.3 116.6 276.0 108.0 Q285.7 116.6 299.0 118.0 Z"/><rect x="251.0" y="116.6" width="50.0" height="2.8" rx="1.4"/><rect x="270.0" y="96" width="12" height="54.0"/><path d="M259.0 96.0 Q268.9 94.7 276.0 87.0 Q283.1 94.7 293.0 96.0 Z"/><rect x="257.0" y="94.6" width="38.0" height="2.8" rx="1.4"/><rect x="36.0" y="132" width="12" height="18.0"/><path d="M26.0 132.0 Q35.3 130.9 42.0 124.0 Q48.7 130.9 58.0 132.0 Z"/><rect x="24.0" y="130.6" width="36.0" height="2.8" rx="1.4"/><rect x="332.0" y="132" width="12" height="18.0"/><path d="M322.0 132.0 Q331.3 130.9 338.0 124.0 Q344.7 130.9 354.0 132.0 Z"/><rect x="320.0" y="130.6" width="36.0" height="2.8" rx="1.4"/><path d="M190 35V26" stroke-width="1.6"/><circle cx="190" cy="23" r="2.2"/><path d="M0 150 L0 136 Q22 126 46 133 Q70 140 92 130 Q114 120 138 130 Q162 140 186 129 Q210 118 234 129 Q258 140 280 130 Q302 120 326 130 Q350 140 372 132 Q377 130 380 133 L380 150 Z" opacity=".55"/></svg>
+  <header class="top">
+    <svg class="shan" viewBox="0 0 380 62" preserveAspectRatio="none"><rect x="177.0" y="44" width="26" height="0.0"/><path d="M159.0 44.0 Q177.0 42.5 190.0 33.0 Q203.0 42.5 221.0 44.0 Z"/><rect x="157.0" y="42.6" width="66.0" height="2.8" rx="1.4"/><rect x="180.5" y="31" width="19" height="0.0"/><path d="M166.0 31.0 Q179.9 29.6 190.0 21.0 Q200.1 29.6 214.0 31.0 Z"/><rect x="164.0" y="29.6" width="52.0" height="2.8" rx="1.4"/><rect x="184.0" y="19" width="12" height="43.0"/><path d="M173.0 19.0 Q182.9 17.7 190.0 10.0 Q197.1 17.7 207.0 19.0 Z"/><rect x="171.0" y="17.6" width="38.0" height="2.8" rx="1.4"/><rect x="105.0" y="47" width="14" height="0.0"/><path d="M94.0 47.0 Q104.4 45.7 112.0 38.0 Q119.6 45.7 130.0 47.0 Z"/><rect x="92.0" y="45.6" width="40.0" height="2.8" rx="1.4"/><rect x="107.5" y="35" width="9" height="27.0"/><path d="M99.0 35.0 Q106.5 33.9 112.0 27.0 Q117.5 33.9 125.0 35.0 Z"/><rect x="97.0" y="33.6" width="30.0" height="2.8" rx="1.4"/><rect x="261.0" y="47" width="14" height="0.0"/><path d="M250.0 47.0 Q260.4 45.7 268.0 38.0 Q275.6 45.7 286.0 47.0 Z"/><rect x="248.0" y="45.6" width="40.0" height="2.8" rx="1.4"/><rect x="263.5" y="35" width="9" height="27.0"/><path d="M255.0 35.0 Q262.5 33.9 268.0 27.0 Q273.5 33.9 281.0 35.0 Z"/><rect x="253.0" y="33.6" width="30.0" height="2.8" rx="1.4"/><rect x="41.5" y="50" width="9" height="12.0"/><path d="M33.0 50.0 Q40.5 49.0 46.0 43.0 Q51.5 49.0 59.0 50.0 Z"/><rect x="31.0" y="48.6" width="30.0" height="2.8" rx="1.4"/><rect x="329.5" y="50" width="9" height="12.0"/><path d="M321.0 50.0 Q328.5 49.0 334.0 43.0 Q339.5 49.0 347.0 50.0 Z"/><rect x="319.0" y="48.6" width="30.0" height="2.8" rx="1.4"/><path d="M190 10V4" stroke-width="1.5"/><circle cx="190" cy="3" r="1.8"/></svg>
+    <div class="top-in"><h1 class="title">下载</h1>
+      <span class="seal"><b>安</b><b>辉</b></span>
+      <span class="ver">v1.4.0</span>
+      <div class="acts"><button class="act on">含文件</button><button class="act">按日期</button><button class="act">清空</button><button class="act"><svg class="ic"><use href="#i-settings"></use></svg></button></div></div>
+  </header>
+  <div class="hair"></div>
+  <nav class="tabs"><button class="tab is-active">全部</button><button class="tab">进行中</button><button class="tab">已完成</button><button class="tab">失败</button></nav>
+  <div class="srch"><input placeholder="搜索文件名或来源站点"></div>
+  <main class="list"><div class="gp"><b>今 天</b><i>6</i><span class="rule"></span></div><article class="row is-hero"><span class="ring r-lg s-live" style="--p:0.45"><svg class="ic"><use href="#i-video"></use></svg></span>
+      <div class="hd"><p class="nm">产品发布会-完整版.mp4</p><p class="sub">cdn.example.com<span class="dot"></span>460 MB / 1.2 GB</p>
+      <p class="big"><b>45</b><i>%</i><em>3.2 MB/s</em></p><p class="eta">剩余 2 分 10 秒</p></div></article><article class="row"><span class="ring r-sm s-ok" style="--p:1"><svg class="ic"><use href="#i-doc"></use></svg></span><p class="nm">店铺后台批量导出exportChannel.xlsx</p><span class="tm">16:07</span></article><article class="row"><span class="ring r-sm s-bad" style="--p:0"><svg class="ic"><use href="#i-app"></use></svg></span><p class="nm">unknown-setup.dmg</p><span class="tm">15:40</span></article><article class="row"><span class="ring r-sm s-warn" style="--p:0.72"><svg class="ic"><use href="#i-archive"></use></svg></span><p class="nm">source-code.zip</p><span class="tm">15:32</span></article><article class="row"><span class="ring r-sm s-ok" style="--p:1"><svg class="ic"><use href="#i-image"></use></svg></span><p class="nm">ic_jump-link.svg</p><span class="tm">14:49</span></article><article class="row"><span class="ring r-sm s-ok" style="--p:1"><svg class="ic"><use href="#i-audio"></use></svg></span><p class="nm">会议录音-最终版.m4a</p><span class="tm">14:20</span></article></main>
+</div></div>
+</div>
+<h2>新一套文件图标（准确优先：纸张 / 文档 / 图片 / 视频 / 音频 / 压缩包 / 程序）</h2>
+<div class="icons"><div class="icell"><span class="big"><svg class="ic"><use href="#i-file"></use></svg></span><b>纸张</b></div><div class="icell"><span class="big"><svg class="ic"><use href="#i-doc"></use></svg></span><b>文档</b></div><div class="icell"><span class="big"><svg class="ic"><use href="#i-image"></use></svg></span><b>图片</b></div><div class="icell"><span class="big"><svg class="ic"><use href="#i-video"></use></svg></span><b>视频</b></div><div class="icell"><span class="big"><svg class="ic"><use href="#i-audio"></use></svg></span><b>音频</b></div><div class="icell"><span class="big"><svg class="ic"><use href="#i-archive"></use></svg></span><b>压缩包</b></div><div class="icell"><span class="big"><svg class="ic"><use href="#i-app"></use></svg></span><b>程序</b></div></div>
+</body></html>

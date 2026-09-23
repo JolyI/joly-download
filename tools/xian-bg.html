@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8"><title>背景对比</title>
+<style>
+:root { --ground:#f2f5f9; --surface:#fff; --ink:#1a1f2b; --ink-2:#5b6b82; --ink-3:#97a4b6;
+  --line:rgba(26,31,43,.09); --spirit:#2fb8b0; --glow:rgba(47,184,176,.20); --gold:#b08a34; --cinnabar:#b8462f; }
+* { box-sizing:border-box; }
+body { margin:0; padding:22px 24px 30px; background:#e4e7ea;
+  font:13px/1.5 -apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif; -webkit-font-smoothing:antialiased; }
+.sprite { position:absolute; width:0; height:0; }
+.ic { width:15px; height:15px; display:block; }
+.rowwrap { display:grid; grid-template-columns:repeat(3,380px); gap:20px 18px; align-items:flex-start; }
+.case > .cap { padding:0 2px 9px; }
+.case > .cap b { font-size:13px; font-weight:800; color:#1a1f2b; }
+.case > .cap span { display:block; font-size:11px; color:#6d7a8b; margin-top:2px; }
+
+.pane { position:relative; width:380px; height:560px; display:flex; flex-direction:column; overflow:hidden;
+  color:var(--ink); border-radius:10px; box-shadow:0 2px 10px rgba(0,0,0,.12); }
+.pane > *:not(.scenery) { position:relative; z-index:1; }
+.scenery { position:absolute; left:0; right:0; bottom:0; width:100%; height:150px; color:var(--ink); pointer-events:none; z-index:0; }
+.pane.dk { --ground:#0b0e14; --surface:#141a26; --ink:#e8eef7; --ink-2:#93a3bb; --ink-3:#5f6d84;
+  --line:rgba(232,238,247,.10); --spirit:#4fd8cf; --glow:rgba(79,216,207,.22); --gold:#d8b45e; --cinnabar:#e0664a; }
+
+.top { position:relative; flex:none; padding:16px 18px 22px; overflow:hidden; }
+.top .shan { position:absolute; left:0; right:0; bottom:0; width:100%; height:40px; pointer-events:none; }
+.top .shan .far { color:var(--ink); opacity:.055; } .top .shan .near { color:var(--ink); opacity:.095; }
+.top-in { position:relative; display:flex; align-items:baseline; gap:9px; }
+.title { margin:0; font-size:21px; font-weight:800; letter-spacing:4px; }
+.seal { align-self:center; width:17px; height:17px; border-radius:3px; background:var(--cinnabar); color:#fff;
+  font-size:10px; font-weight:700; display:flex; align-items:center; justify-content:center; flex:none; }
+.ver { font-size:10px; font-weight:600; color:var(--ink-3); }
+.acts { margin-left:auto; display:flex; align-items:center; gap:4px; }
+.act { appearance:none; font:inherit; font-size:11px; font-weight:500; color:var(--ink-2);
+  background:transparent; border:0; padding:3px 7px; border-radius:6px; cursor:pointer; }
+.act.on { color:var(--cinnabar); font-weight:700; }
+.hair { height:1px; background:var(--line); margin:0 18px; }
+.tabs { flex:none; display:flex; gap:18px; padding:14px 18px 0; }
+.tab { appearance:none; font:inherit; font-size:12px; font-weight:500; color:var(--ink-3);
+  background:transparent; border:0; padding:0 0 5px; cursor:pointer; position:relative; }
+.tab.is-active { color:var(--ink); font-weight:700; }
+.tab.is-active::after { content:""; position:absolute; left:0; right:0; bottom:0; height:2px; background:var(--spirit); border-radius:1px; }
+.srch { flex:none; padding:14px 18px 0; }
+.srch input { width:100%; appearance:none; font:inherit; font-size:12px; color:var(--ink); background:transparent;
+  border:0; border-bottom:1px solid var(--line); padding:5px 0; outline:none; }
+.srch input::placeholder { color:var(--ink-3); }
+.list { flex:1; overflow-y:auto; padding:0 18px 16px; }
+.gp { display:flex; align-items:center; gap:9px; padding:18px 0 8px; position:sticky; top:0; background:var(--ground); z-index:2; }
+.gp b { font-size:11px; font-weight:700; letter-spacing:2px; color:var(--ink-2); }
+.gp i { font-size:10px; font-style:normal; color:var(--ink-3); }
+.gp .rule { flex:1; height:1px; background:linear-gradient(90deg,var(--line),transparent); }
+.ring { position:relative; flex:none; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  background:conic-gradient(from -90deg, var(--spirit) calc(var(--p)*1turn), var(--line) 0); }
+.ring::before { content:""; position:absolute; inset:2px; border-radius:50%; background:var(--ground); }
+.ring .ic { position:relative; z-index:1; color:var(--ink-2); }
+.ring.r-sm { width:30px; height:30px; } .ring.r-lg { width:62px; height:62px; }
+.ring.r-lg::before { inset:3px; } .ring.r-lg .ic { width:24px; height:24px; }
+.ring.s-ok { background:conic-gradient(var(--gold) 1turn,var(--gold) 0); } .ring.s-ok .ic { color:var(--gold); }
+.ring.s-warn { background:conic-gradient(from -90deg, var(--ink-3) calc(var(--p)*1turn), var(--line) 0); }
+.ring.s-bad { background:conic-gradient(var(--cinnabar) 1turn,var(--cinnabar) 0); } .ring.s-bad .ic { color:var(--cinnabar); }
+.ring.s-live { box-shadow:0 0 0 4px var(--glow), 0 0 22px 2px var(--glow); } .ring.s-live .ic { color:var(--spirit); }
+.row { display:flex; align-items:center; gap:13px; padding:9px 0; border-bottom:1px solid var(--line); }
+.row:last-child { border-bottom:0; }
+.row .nm { flex:1; min-width:0; margin:0; font-size:13px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.row .tm { flex:none; font-size:11px; color:var(--ink-3); }
+.row.is-hero { gap:16px; margin:6px 0 4px; padding:16px 15px; border:0; border-radius:14px; background:var(--surface);
+  box-shadow:0 0 0 1px var(--line), 0 10px 34px -10px var(--glow), 0 3px 12px -5px rgba(20,30,50,.14); }
+.row.is-hero .hd { flex:1; min-width:0; }
+.row.is-hero .nm { font-size:14px; font-weight:700; line-height:1.35; white-space:normal; word-break:break-all; }
+.row.is-hero .sub { margin:3px 0 0; font-size:11px; color:var(--ink-3); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.row.is-hero .sub .dot { display:inline-block; width:3px; height:3px; border-radius:50%; background:var(--ink-3); vertical-align:middle; margin:0 6px; opacity:.6; }
+.row.is-hero .big { margin:8px 0 0; display:flex; align-items:baseline; gap:2px; }
+.row.is-hero .big b { font-size:32px; font-weight:800; letter-spacing:-1.5px; line-height:1; }
+.row.is-hero .big i { font-size:14px; font-weight:700; font-style:normal; color:var(--ink-3); }
+.row.is-hero .big em { font-size:12px; font-style:normal; font-weight:600; color:var(--spirit); margin-left:8px; }
+.row.is-hero .eta { margin:3px 0 0; font-size:11px; color:var(--ink-3); }
+.row.is-hero .ring::before { background:var(--surface); }
+</style>
+</head><body>
+<svg class="sprite" xmlns="http://www.w3.org/2000/svg"><symbol id="i-file" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2.6" width="8" height="18.8" rx="4"/><path d="M10.4 8.4h3.2M10.4 12.4h3.2"/></g></symbol>
+<symbol id="i-doc" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4.6" y="5" width="3.6" height="15" rx="1.8"/><rect x="10.2" y="2.8" width="3.6" height="17.2" rx="1.8"/><rect x="15.8" y="5" width="3.6" height="15" rx="1.8"/><path d="M3 10.2h18" stroke-width="1.1" opacity=".5"/></g></symbol>
+<symbol id="i-image" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 4.4v15.2M18.5 4.4v15.2"/><rect x="5.5" y="7" width="13" height="10" rx="1.3"/><circle cx="12" cy="12" r="2.2"/></g></symbol>
+<symbol id="i-video" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.4"/><path d="M9.9 8.7l5.6 3.3-5.6 3.3z"/><path d="M6.3 8.4A7.4 7.4 0 0 1 8.8 5.7" opacity=".45"/></g></symbol>
+<symbol id="i-audio" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.2v2.6"/><path d="M8.5 17.4V11a3.5 3.5 0 0 1 7 0v6.4z"/><path d="M7 17.4h10"/></g></symbol>
+<symbol id="i-archive" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.2 8.3C6.3 9.9 4.6 12.5 4.6 15.2a4.6 4.6 0 0 0 4.6 4.6h5.6a4.6 4.6 0 0 0 4.6-4.6c0-2.7-1.7-5.3-4.6-6.9z"/><path d="M9.2 8.3V6.7A2.8 2.8 0 0 1 12 3.9a2.8 2.8 0 0 1 2.8 2.8v1.6"/><path d="M9.4 8.3h5.2" opacity=".5"/></g></symbol>
+<symbol id="i-app" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.2L20 12l-8 8.8L4 12z"/><path d="M12 8.1l3.9 3.9-3.9 3.9-3.9-3.9z" opacity=".5"/></g></symbol></svg>
+<div class="rowwrap">
+<div class="case"><div class="cap"><b>青碧渐变</b><span>上青下白，云海之上的空气感</span></div><div class="pane" style="background: linear-gradient(180deg,#dcecee 0%,#eef7f8 52%,#fbfdfd 100%);">
+  
+  <header class="top">
+    <svg class="shan" viewBox="0 0 380 40" preserveAspectRatio="none"><path class="far" d="M0 40 L0 26 L46 9 L86 24 L128 3 L172 22 L214 8 L258 25 L302 11 L344 26 L380 14 L380 40 Z" fill="currentColor"/><path class="near" d="M0 40 L0 33 L52 21 L104 31 L156 18 L208 30 L262 20 L316 31 L380 24 L380 40 Z" fill="currentColor"/></svg>
+    <div class="top-in"><h1 class="title">下载</h1><span class="seal">玄</span><span class="ver">v1.4.0</span>
+      <div class="acts"><button class="act on">含文件</button><button class="act">按日期</button><button class="act">清空</button><button class="act"><svg class="ic"><use href="#i-settings"></use></svg></button></div></div>
+  </header>
+  <div class="hair"></div>
+  <nav class="tabs"><button class="tab is-active">全部</button><button class="tab">进行中</button><button class="tab">已完成</button><button class="tab">失败</button></nav>
+  <div class="srch"><input placeholder="搜索文件名或来源站点"></div>
+  <main class="list"><div class="gp"><b>今 天</b><i>5</i><span class="rule"></span></div><article class="row is-hero"><span class="ring r-lg s-live" style="--p:0.45"><svg class="ic"><use href="#i-video"></use></svg></span>
+      <div class="hd"><p class="nm">产品发布会-完整版.mp4</p><p class="sub">cdn.example.com<span class="dot"></span>460 MB / 1.2 GB</p>
+      <p class="big"><b>45</b><i>%</i><em>3.2 MB/s</em></p><p class="eta">剩余 2 分 10 秒</p></div></article><article class="row"><span class="ring r-sm s-ok" style="--p:1"><svg class="ic"><use href="#i-doc"></use></svg></span><p class="nm">店铺后台批量导出exportChannel.xlsx</p><span class="tm">16:07</span></article><article class="row"><span class="ring r-sm s-bad" style="--p:0"><svg class="ic"><use href="#i-app"></use></svg></span><p class="nm">unknown-setup.dmg</p><span class="tm">15:40</span></article><article class="row"><span class="ring r-sm s-warn" style="--p:0.72"><svg class="ic"><use href="#i-archive"></use></svg></span><p class="nm">source-code.zip</p><span class="tm">15:32</span></article><article class="row"><span class="ring r-sm s-ok" style="--p:1"><svg class="ic"><use href="#i-image"></use></svg></span><p class="nm">ic_jump-link.svg</p><span class="tm">14:49</span></article></main>
+</div></div>
+<div class="case"><div class="cap"><b>云气纹</b><span>月白底 + 极淡如意云纹（已压到 .075）</span></div><div class="pane" style="background-color:#eef3f7; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='112'%3E%3Cg fill='none' stroke='%235b6b82' stroke-width='1.1' stroke-linecap='round'%3E%3Cpath d='M18 62a9 9 0 0 1 1.8-17.8 12.2 12.2 0 0 1 23.8-3.3A9.5 9.5 0 0 1 55 62z' opacity='.075'/%3E%3Cpath d='M84 104a7 7 0 0 1 1.3-13.7 9.3 9.3 0 0 1 18.2-2.6A7.2 7.2 0 0 1 114 104z' opacity='.055'/%3E%3C/g%3E%3C/svg%3E"); background-size:150px 112px;">
+  
+  <header class="top">
+    <svg class="shan" viewBox="0 0 380 40" preserveAspectRatio="none"><path class="far" d="M0 40 L0 26 L46 9 L86 24 L128 3 L172 22 L214 8 L258 25 L302 11 L344 26 L380 14 L380 40 Z" fill="currentColor"/><path class="near" d="M0 40 L0 33 L52 21 L104 31 L156 18 L208 30 L262 20 L316 31 L380 24 L380 40 Z" fill="currentColor"/></svg>
+    <div class="top-in"><h1 class="title">下载</h1><span class="seal">玄</span><span class="ver">v1.4.0</span>
+      <div class="acts"><button class="act on">含文件</button><button class="act">按日期</button><button class="act">清空</button><button class="act"><svg class="ic"><use href="#i-settings"></use></svg></button></div></div>
+  </header>
+  <div class="hair"></div>
+  <nav class="tabs"><button class="tab is-active">全部</button><button class="tab">进行中</button><button class="tab">已完成</button><button class="tab">失败</button></nav>
+  <div class="srch"><input placeholder="搜索文件名或来源站点"></div>
+  <main class="list"><div class="gp"><b>今 天</b><i>5</i><span class="rule"></span></div><article class="row is-hero"><span class="ring r-lg s-live" style="--p:0.45"><svg class="ic"><use href="#i-video"></use></svg></span>
+      <div class="hd"><p class="nm">产品发布会-完整版.mp4</p><p class="sub">cdn.example.com<span class="dot"></span>460 MB / 1.2 GB</p>
+      <p class="big"><b>45</b><i>%</i><em>3.2 MB/s</em></p><p class="eta">剩余 2 分 10 秒</p></div></article><article class="row"><span class="ring r-sm s-ok" style="--p:1"><svg class="ic"><use href="#i-doc"></use></svg></span><p class="nm">店铺后台批量导出exportChannel.xlsx</p><span class="tm">16:07</span></article><article class="row"><span class="ring r-sm s-bad" style="--p:0"><svg class="ic"><use href="#i-app"></use></svg></span><p class="nm">unknown-setup.dmg</p><span class="tm">15:40</span></article><article class="row"><span class="ring r-sm s-warn" style="--p:0.72"><svg class="ic"><use href="#i-archive"></use></svg></span><p class="nm">source-code.zip</p><span class="tm">15:32</span></article><article class="row"><span class="ring r-sm s-ok" style="--p:1"><svg class="ic"><use href="#i-image"></use></svg></span><p class="nm">ic_jump-link.svg</p><span class="tm">14:49</span></article></main>
+</div></div>
+<div class="case"><div class="cap"><b>宣纸纸纹</b><span>暖白 + feTurbulence 不规则颗粒（不再是网）</span></div><div class="pane" style="background-color:#f7f5ef; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.055'/%3E%3C/svg%3E");">
+  
+  <header class="top">
+    <svg class="shan" viewBox="0 0 380 40" preserveAspectRatio="none"><path class="far" d="M0 40 L0 26 L46 9 L86 24 L128 3 L172 22 L214 8 L258 25 L302 11 L344 26 L380 14 L380 40 Z" fill="currentColor"/><path class="near" d="M0 40 L0 33 L52 21 L104 31 L156 18 L208 30 L262 20 L316 31 L380 24 L380 40 Z" fill="currentColor"/></svg>
+    <div class="top-in"><h1 class="title">下载</h1><span class="seal">玄</span><span class="ver">v1.4.0</span>
+      <div class="acts"><button class="act on">含文件</button><button class="act">按日期</button><button class="act">清空</button><button class="act"><svg class="ic"><use href="#i-settings"></use></svg></button></div></div>
+  </header>
+  <div class="hair"></div>
+  <nav class="tabs"><button class="tab is-active">全部</button><button class="tab">进行中</button><button class="tab">已完成</button><button class="tab">失败</button></nav>
+  <div class="srch"><input placeholder="搜索文件名或来源站点"></div>
+  <main class="list"><div class="gp"><b>今 天</b><i>5</i><span class="rule"></span></div><article class="row is-hero"><span class="ring r-lg s-live" style="--p:0.45"><svg class="ic"><use href="#i-video"></use></svg></span>
+      <div class="hd"><p class="nm">产品发布会-完整版.mp4</p><p class="sub">cdn.example.com<span class="dot"></span>460 MB / 1.2 GB</p>
+      <p class="big"><b>45</b><i>%</i><em>3.2 MB/s</em></p><p class="eta">剩余 2 分 10 秒</p></div></article><article class="row"><span class="ring r-sm s-ok" style="--p:1"><svg class="ic"><use href="#i-doc"></use></svg></span><p class="nm">店铺后台批量导出exportChannel.xlsx</p><span class="tm">16:07</span></article><article class="row"><span class="ring r-sm s-bad" style="--p:0"><svg class="ic"><use href="#i-app"></use></svg></span><p class="nm">unknown-setup.dmg</p><span class="tm">15:40</span></article><article class="row"><span class="ring r-sm s-warn" style="--p:0.72"><svg class="ic"><use href="#i-archive"></use></svg></span><p class="nm">source-code.zip</p><span class="tm">15:32</span></article><article class="row"><span class="ring r-sm s-ok" style="--p:1"><svg class="ic"><use href="#i-image"></use></svg></span><p class="nm">ic_jump-link.svg</p><span class="tm">14:49</span></article></main>
+</div></div>
+<div class="case"><div class="cap"><b>整幅山水</b><span>远山压底 + 云气罩顶，整个面板都有空气感</span></div><div class="pane" style="background: linear-gradient(180deg,#e9f1f4 0%,#f6fafb 60%);">
+  <svg class="scenery" viewBox="0 0 380 150" preserveAspectRatio="none">
+    <path d="M0 150 L0 108 L54 78 L112 100 L168 62 L226 96 L286 70 L340 98 L380 82 L380 150 Z" fill="currentColor" opacity=".05"/>
+    <path d="M0 150 L0 128 L62 106 L128 126 L196 100 L258 124 L322 108 L380 126 L380 150 Z" fill="currentColor" opacity=".075"/>
+  </svg>
+  <header class="top">
+    <svg class="shan" viewBox="0 0 380 40" preserveAspectRatio="none"><path class="far" d="M0 40 L0 26 L46 9 L86 24 L128 3 L172 22 L214 8 L258 25 L302 11 L344 26 L380 14 L380 40 Z" fill="currentColor"/><path class="near" d="M0 40 L0 33 L52 21 L104 31 L156 18 L208 30 L262 20 L316 31 L380 24 L380 40 Z" fill="currentColor"/></svg>
+    <div class="top-in"><h1 class="title">下载</h1><span class="seal">玄</span><span class="ver">v1.4.0</span>
+      <div class="acts"><button class="act on">含文件</button><button class="act">按日期</button><button class="act">清空</button><button class="act"><svg class="ic"><use href="#i-settings"></use></svg></button></div></div>
+  </header>
+  <div class="hair"></div>
+  <nav class="tabs"><button class="tab is-active">全部</button><button class="tab">进行中</button><button class="tab">已完成</button><button class="tab">失败</button></nav>
+  <div class="srch"><input placeholder="搜索文件名或来源站点"></div>
+  <main class="list"><div class="gp"><b>今 天</b><i>5</i><span class="rule"></span></div><article class="row is-hero"><span class="ring r-lg s-live" style="--p:0.45"><svg class="ic"><use href="#i-video"></use></svg></span>
+      <div class="hd"><p class="nm">产品发布会-完整版.mp4</p><p class="sub">cdn.example.com<span class="dot"></span>460 MB / 1.2 GB</p>
+      <p class="big"><b>45</b><i>%</i><em>3.2 MB/s</em></p><p class="eta">剩余 2 分 10 秒</p></div></article><article class="row"><span class="ring r-sm s-ok" style="--p:1"><svg class="ic"><use href="#i-doc"></use></svg></span><p class="nm">店铺后台批量导出exportChannel.xlsx</p><span class="tm">16:07</span></article><article class="row"><span class="ring r-sm s-bad" style="--p:0"><svg class="ic"><use href="#i-app"></use></svg></span><p class="nm">unknown-setup.dmg</p><span class="tm">15:40</span></article><article class="row"><span class="ring r-sm s-warn" style="--p:0.72"><svg class="ic"><use href="#i-archive"></use></svg></span><p class="nm">source-code.zip</p><span class="tm">15:32</span></article><article class="row"><span class="ring r-sm s-ok" style="--p:1"><svg class="ic"><use href="#i-image"></use></svg></span><p class="nm">ic_jump-link.svg</p><span class="tm">14:49</span></article></main>
+</div></div>
+<div class="case"><div class="cap"><b>玄夜</b><span>深底，灵青辉光在暗处才真正亮得起来</span></div><div class="pane dk" style="background:#0b0e14;">
+  
+  <header class="top">
+    <svg class="shan" viewBox="0 0 380 40" preserveAspectRatio="none"><path class="far" d="M0 40 L0 26 L46 9 L86 24 L128 3 L172 22 L214 8 L258 25 L302 11 L344 26 L380 14 L380 40 Z" fill="currentColor"/><path class="near" d="M0 40 L0 33 L52 21 L104 31 L156 18 L208 30 L262 20 L316 31 L380 24 L380 40 Z" fill="currentColor"/></svg>
+    <div class="top-in"><h1 class="title">下载</h1><span class="seal">玄</span><span class="ver">v1.4.0</span>
+      <div class="acts"><button class="act on">含文件</button><button class="act">按日期</button><button class="act">清空</button><button class="act"><svg class="ic"><use href="#i-settings"></use></svg></button></div></div>
+  </header>
+  <div class="hair"></div>
+  <nav class="tabs"><button class="tab is-active">全部</button><button class="tab">进行中</button><button class="tab">已完成</button><button class="tab">失败</button></nav>
+  <div class="srch"><input placeholder="搜索文件名或来源站点"></div>
+  <main class="list"><div class="gp"><b>今 天</b><i>5</i><span class="rule"></span></div><article class="row is-hero"><span class="ring r-lg s-live" style="--p:0.45"><svg class="ic"><use href="#i-video"></use></svg></span>
+      <div class="hd"><p class="nm">产品发布会-完整版.mp4</p><p class="sub">cdn.example.com<span class="dot"></span>460 MB / 1.2 GB</p>
+      <p class="big"><b>45</b><i>%</i><em>3.2 MB/s</em></p><p class="eta">剩余 2 分 10 秒</p></div></article><article class="row"><span class="ring r-sm s-ok" style="--p:1"><svg class="ic"><use href="#i-doc"></use></svg></span><p class="nm">店铺后台批量导出exportChannel.xlsx</p><span class="tm">16:07</span></article><article class="row"><span class="ring r-sm s-bad" style="--p:0"><svg class="ic"><use href="#i-app"></use></svg></span><p class="nm">unknown-setup.dmg</p><span class="tm">15:40</span></article><article class="row"><span class="ring r-sm s-warn" style="--p:0.72"><svg class="ic"><use href="#i-archive"></use></svg></span><p class="nm">source-code.zip</p><span class="tm">15:32</span></article><article class="row"><span class="ring r-sm s-ok" style="--p:1"><svg class="ic"><use href="#i-image"></use></svg></span><p class="nm">ic_jump-link.svg</p><span class="tm">14:49</span></article></main>
+</div></div>
+</div>
+</body></html>

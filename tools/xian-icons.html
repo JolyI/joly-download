@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8"><title>印章与图标定版</title>
+<style>
+:root { --ground:#eef3f7; --ink:#1a1f2b; --ink-2:#5b6b82; --ink-3:#97a4b6;
+  --line:rgba(26,31,43,.09); --spirit:#2fb8b0; --cinnabar:#b8462f; }
+* { box-sizing:border-box; }
+body { margin:0; padding:26px 30px 34px; background:#e9ecef; color:var(--ink);
+  font:13px/1.5 -apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif; -webkit-font-smoothing:antialiased; }
+h2 { font-size:12px; font-weight:800; letter-spacing:2.5px; color:#7d8a9c; margin:0 0 16px;
+     padding-bottom:8px; border-bottom:1px solid #d5dbe3; }
+h2:not(:first-child) { margin-top:34px; }
+.sprite { position:absolute; width:0; height:0; }
+.ic { width:15px; height:15px; display:block; }
+
+.seals { display:grid; grid-template-columns:repeat(3,286px); gap:16px 20px; }
+.scard { }
+.mini { display:flex; align-items:baseline; gap:8px; padding:12px 14px 14px; background:var(--ground);
+  border:1px solid #dbe1e8; border-radius:9px; overflow:hidden; }
+.mt { font-size:18px; font-weight:800; letter-spacing:3px; }
+.ms { align-self:center; width:16px; height:16px; border-radius:3px; background:var(--cinnabar); color:#fff;
+  font-size:9.5px; font-weight:700; display:flex; align-items:center; justify-content:center; flex:none; }
+.mv { font-size:9.5px; color:var(--ink-3); }
+.msp { flex:1; min-width:6px; }
+.ma { font-size:10.5px; color:var(--ink-2); white-space:nowrap; }
+.ma.on { color:var(--cinnabar); font-weight:700; }
+.sl { padding:8px 2px 0; display:flex; align-items:baseline; gap:8px; }
+.sl b { font-size:12px; font-weight:700; }
+.sl span { font-size:11px; color:#8b97a8; }
+
+.icons { display:flex; gap:14px; flex-wrap:wrap; }
+.icell { width:96px; display:flex; flex-direction:column; align-items:center; gap:7px;
+  padding:15px 6px 11px; background:var(--ground); border:1px solid #dbe1e8; border-radius:10px; }
+.ring { position:relative; width:30px; height:30px; border-radius:50%; flex:none;
+  display:flex; align-items:center; justify-content:center;
+  background:conic-gradient(from -90deg, var(--spirit) calc(var(--p,.45)*1turn), var(--line) 0); }
+.ring::before { content:""; position:absolute; inset:2px; border-radius:50%; background:var(--ground); }
+.ring .ic { position:relative; z-index:1; color:var(--ink-2); }
+.icell b { font-size:10.5px; font-weight:700; }
+</style>
+</head><body>
+<svg class="sprite" xmlns="http://www.w3.org/2000/svg"><symbol id="i-file" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2.6" width="8" height="18.8" rx="4"/><path d="M10.4 8.4h3.2M10.4 12.4h3.2"/></g></symbol>
+<symbol id="i-doc" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4.6" y="5" width="3.6" height="15" rx="1.8"/><rect x="10.2" y="2.8" width="3.6" height="17.2" rx="1.8"/><rect x="15.8" y="5" width="3.6" height="15" rx="1.8"/><path d="M3 10.2h18" stroke-width="1.1" opacity=".5"/></g></symbol>
+<symbol id="i-image" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 4.4v15.2M18.5 4.4v15.2"/><rect x="5.5" y="7" width="13" height="10" rx="1.3"/><circle cx="12" cy="12" r="2.2"/></g></symbol>
+<symbol id="i-video" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.4"/><path d="M9.9 8.7l5.6 3.3-5.6 3.3z"/><path d="M6.3 8.4A7.4 7.4 0 0 1 8.8 5.7" opacity=".45"/></g></symbol>
+<symbol id="i-audio" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.2v2.6"/><path d="M8.5 17.4V11a3.5 3.5 0 0 1 7 0v6.4z"/><path d="M7 17.4h10"/></g></symbol>
+<symbol id="i-archive" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.2 8.3C6.3 9.9 4.6 12.5 4.6 15.2a4.6 4.6 0 0 0 4.6 4.6h5.6a4.6 4.6 0 0 0 4.6-4.6c0-2.7-1.7-5.3-4.6-6.9z"/><path d="M9.2 8.3V6.7A2.8 2.8 0 0 1 12 3.9a2.8 2.8 0 0 1 2.8 2.8v1.6"/><path d="M9.4 8.3h5.2" opacity=".5"/></g></symbol>
+<symbol id="i-app" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.2L20 12l-8 8.8L4 12z"/><path d="M12 8.1l3.9 3.9-3.9 3.9-3.9-3.9z" opacity=".5"/></g></symbol></svg>
+
+<h2>A · 印章换成什么字</h2>
+<div class="seals"><div class="scard">
+  <div class="mini">
+    <span class="mt">下载</span>
+    <span class="ms">仙</span>
+    <span class="mv">v1.4.0</span>
+    <span class="msp"></span>
+    <span class="ma on">含文件</span><span class="ma">按日期</span><span class="ma">清空</span>
+  </div>
+  <div class="sl"><b>仙</b><span>直接点题，但最像标语</span></div>
+</div><div class="scard">
+  <div class="mini">
+    <span class="mt">下载</span>
+    <span class="ms">灵</span>
+    <span class="mv">v1.4.0</span>
+    <span class="msp"></span>
+    <span class="ma on">含文件</span><span class="ma">按日期</span><span class="ma">清空</span>
+  </div>
+  <div class="sl"><b>灵</b><span>呼应灵青 / 灵气</span></div>
+</div><div class="scard">
+  <div class="mini">
+    <span class="mt">下载</span>
+    <span class="ms">玄</span>
+    <span class="mv">v1.4.0</span>
+    <span class="msp"></span>
+    <span class="ma on">含文件</span><span class="ma">按日期</span><span class="ma">清空</span>
+  </div>
+  <div class="sl"><b>玄</b><span>含蓄，不像口号</span></div>
+</div><div class="scard">
+  <div class="mini">
+    <span class="mt">下载</span>
+    <span class="ms">御</span>
+    <span class="mv">v1.4.0</span>
+    <span class="msp"></span>
+    <span class="ma on">含文件</span><span class="ma">按日期</span><span class="ma">清空</span>
+  </div>
+  <div class="sl"><b>御</b><span>御剑 / 御物 —— 掌控</span></div>
+</div><div class="scard">
+  <div class="mini">
+    <span class="mt">下载</span>
+    <span class="ms"><svg viewBox="0 0 24 24" style="width:11px;height:11px;display:block"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5.2 15.6a3 3 0 0 1 .6-5.9 4.2 4.2 0 0 1 8.3-1.2 3.3 3.3 0 0 1 4.6 3.1 3 3 0 0 1-3 4z"/></g></svg></span>
+    <span class="mv">v1.4.0</span>
+    <span class="msp"></span>
+    <span class="ma on">含文件</span><span class="ma">按日期</span><span class="ma">清空</span>
+  </div>
+  <div class="sl"><b>云纹</b><span>不用字，用纹</span></div>
+</div><div class="scard">
+  <div class="mini">
+    <span class="mt">下载</span>
+    
+    <span class="mv">v1.4.0</span>
+    <span class="msp"></span>
+    <span class="ma on">含文件</span><span class="ma">按日期</span><span class="ma">清空</span>
+  </div>
+  <div class="sl"><b>无印</b><span>直接去掉，最干净</span></div>
+</div></div>
+
+<h2>B · 文件图标（实际 15px，灵环内）</h2>
+<div class="icons"><div class="icell"><span class="ring" style="--p:.45"><svg class="ic"><use href="#i-file"></use></svg></span><b>玉简</b></div><div class="icell"><span class="ring" style="--p:.45"><svg class="ic"><use href="#i-doc"></use></svg></span><b>竹简</b></div><div class="icell"><span class="ring" style="--p:.45"><svg class="ic"><use href="#i-image"></use></svg></span><b>画卷</b></div><div class="icell"><span class="ring" style="--p:.45"><svg class="ic"><use href="#i-video"></use></svg></span><b>水镜</b></div><div class="icell"><span class="ring" style="--p:.45"><svg class="ic"><use href="#i-audio"></use></svg></span><b>编钟</b></div><div class="icell"><span class="ring" style="--p:.45"><svg class="ic"><use href="#i-archive"></use></svg></span><b>须弥袋</b></div><div class="icell"><span class="ring" style="--p:.45"><svg class="ic"><use href="#i-app"></use></svg></span><b>符牌</b></div></div>
+</body></html>
