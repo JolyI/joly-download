@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Joly 下载 · 交互预览</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; padding: 40px 24px; background: #e8e2d6; color: #24292b; font: 14px/1.6 system-ui, sans-serif; }
+    .preview { display: flex; align-items: flex-start; justify-content: center; gap: 40px; margin: 0 auto; }
+    iframe { display: block; width: 380px; height: 560px; flex: 0 0 380px; border: 0; background: white; box-shadow: 0 18px 50px #332b2b25; }
+    aside { width: 260px; padding-top: 16px; }
+    .eyebrow { color: #725f43; font-size: 11px; font-weight: 700; letter-spacing: .16em; }
+    h1 { font-size: 24px; line-height: 1.3; margin: 8px 0 16px; }
+    p { margin: 0 0 20px; }
+    .controls { display: grid; gap: 8px; }
+    button { padding: 11px 12px; border: 1px solid #b7aa96; background: #fffaf0; color: inherit; text-align: left; font: inherit; font-weight: 600; cursor: pointer; }
+    button:hover { background: #fff; border-color: #655238; }
+    button:focus-visible { outline: 3px solid #176bc7; outline-offset: 2px; }
+    button:disabled { opacity: .5; cursor: wait; }
+    #status { min-height: 80px; margin-top: 20px; padding-top: 14px; border-top: 1px solid #c9bdab; color: #5d513f; }
+    .hint { font-size: 12px; color: #725f43; }
+    @media (max-width: 740px) { body { padding: 24px 12px; } .preview { flex-direction: column; align-items: center; gap: 16px; } aside { width: 380px; max-width: 100%; } }
+    html.panel-only, body.panel-only { width: 380px; height: 560px; min-height: 0; overflow: hidden; }
+    body.panel-only { padding: 0; }
+    .panel-only .preview { display: block; margin: 0; }
+    .panel-only iframe { width: 380px; height: 560px; box-shadow: none; }
+    .panel-only aside { display: none; }
+  </style>
+</head>
+<body>
+  <div class="preview">
+    <iframe id="popup-preview" title="Joly 下载实际弹出面板 · 模拟数据预览" width="380" height="560"></iframe>
+    <aside>
+      <div class="eyebrow">LOCAL INTERACTIVE PREVIEW</div>
+      <h1>Joly 下载 · 交互预览</h1>
+      <p>左侧加载实际弹出面板，所有下载均为内存模拟数据。可测试筛选、搜索、分组和行内操作。</p>
+      <div class="controls">
+        <button type="button" data-action="advance" disabled>预览：推进首个下载 +10%</button>
+        <button type="button" data-action="complete" disabled>预览：完成首个进行中下载</button>
+        <button type="button" data-action="clear" disabled>预览：清空全部模拟记录</button>
+        <button type="button" data-action="reset" disabled>预览：恢复初始 6 条记录</button>
+      </div>
+      <p id="status" role="status" aria-live="polite">正在加载实际面板…</p>
+      <p class="hint">面板尺寸：380 × 560。模拟进度不会自动变化；文件、网络下载与剪贴板操作均已替换。</p>
+    </aside>
+  </div>
+  <script>
+    'use strict';
+    if (new URLSearchParams(location.search).get('panel') === '1') {
+      document.documentElement.classList.add('panel-only');
+      document.body.classList.add('panel-only');
+    }
+    var frame = document.getElementById('popup-preview');
+    var statusEl = document.getElementById('status');
+    var buttons = document.querySelectorAll('button[data-action]');
+
+    window.addEventListener('message', function (event) {
+      if (event.source !== frame.contentWindow || event.origin !== location.origin) return;
+      if (event.data && event.data.type === 'joly-preview-status') statusEl.textContent = event.data.message;
+    });
+
+    buttons.forEach(function (button) {
+      button.addEventListener('click', function () {
+        frame.contentWindow.previewDownloads[button.dataset.action]();
+      });
+    });
+
+    Promise.all([
+      fetch('../popup.html', { cache: 'no-store' }).then(function (response) {
+        if (!response.ok) throw new Error('无法加载 popup.html');
+        return response.text();
+      }),
+      fetch('../manifest.json', { cache: 'no-store' }).then(function (response) {
+        if (!response.ok) throw new Error('无法加载 manifest.json');
+        return response.json();
+      })
+    ]).then(function (results) {
+      var doc = new DOMParser().parseFromString(results[0], 'text/html');
+      var rootUrl = new URL('../', location.href);
+      var version = doc.createElement('script');
+      version.textContent = 'window.__previewVersion = ' + JSON.stringify(results[1].version) + ';';
+      var mock = doc.createElement('script');
+      mock.src = new URL('tools/preview-mock.js', rootUrl).href;
+      var productionScript = doc.querySelector('script[src="popup.js"]');
+      if (!productionScript) throw new Error('未找到实际面板脚本入口');
+      /* 只改资源地址，保留 SVG 的本页 #symbol 引用，避免 base 改变图标定位。 */
+      doc.querySelectorAll('[src], link[href]').forEach(function (element) {
+        var attribute = element.hasAttribute('src') ? 'src' : 'href';
+        element.setAttribute(attribute, new URL(element.getAttribute(attribute), rootUrl).href);
+      });
+      productionScript.before(version, mock);
+      frame.addEventListener('load', function () {
+        if (!frame.contentWindow.previewDownloads) {
+          statusEl.textContent = '模拟器加载失败，请检查浏览器控制台。';
+          return;
+        }
+        buttons.forEach(function (button) { button.disabled = false; });
+        statusEl.textContent = '已加载 6 条模拟下载。鼠标悬停或键盘聚焦到文件可显示操作。';
+      }, { once: true });
+      frame.srcdoc = '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
+    }).catch(function (error) {
+      statusEl.textContent = '预览加载失败：' + error.message + '。请通过本地 HTTP 服务打开此页面。';
+    });
+  </script>
+</body>
+</html>

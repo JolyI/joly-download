@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="380" height="76" viewBox="0 0 380 76" shape-rendering="crispEdges">
+  <title>Super Mario overworld</title>
+  <defs>
+    <g id="coin"><path fill="#9b611c" d="M2 0h6v2h2v8H8v2H2v-2H0V2h2z"/><path fill="#ffd34e" d="M2 1h5v1h1v8H7v1H2V9H1V3h1z"/><path fill="#fff6da" d="M3 2h2v7H3z"/><path fill="#e6a530" d="M6 3h1v6H6z"/></g>
+    <g id="question"><path fill="#24252b" d="M0 0h18v18H0z"/><path fill="#ffd34e" d="M1 1h16v16H1z"/><path fill="#fff0a6" d="M1 1h16v2H3v14H1z"/><path fill="#d58a2c" d="M15 3h2v14H3v-2h12z"/><path fill="#9b611c" d="M5 4h7v1h1v5h-3v2H7V8h3V6H7v2H5zM7 13h3v2H7zM3 3h1v1H3zM14 3h1v1h-1zM3 14h1v1H3zM14 14h1v1h-1z"/></g>
+    <g id="brick"><path fill="#24252b" d="M0 0h18v18H0z"/><path fill="#b96835" d="M1 1h16v16H1z"/><path fill="#f2a16b" d="M1 1h16v2H1zM1 9h16v2H1z"/><path fill="#703d28" d="M0 8h18v1H0zM8 1h1v7H8zM3 9h1v8H3zM13 9h1v8h-1zM0 17h18v1H0z"/></g>
+    <g id="cloud"><path fill="#477cdb" d="M8 4h6V0h16v4h6v4h6v12H0V8h8z"/><path fill="#fff6da" d="M8 6h8V2h12v4h8v4h4v8H2v-8h6z"/><path fill="#e0eaff" d="M2 15h38v3H2z"/></g>
+    <g id="runner"><path fill="#e74730" d="M5 0h5v1H5zM4 1h9v1H4zM4 7h2v1H4zM7 7h3v1H7zM3 8h3v1H3zM7 8h2v1H7zM10 8h3v1h-3zM2 9h4v1H2zM10 9h4v1h-4zM4 10h1v1H4zM11 10h1v1h-1z"/><path fill="#7b4528" d="M4 2h3v1H4zM3 3h1v2H3zM5 3h1v1H5zM5 4h2v1H5zM3 5h2v1H3zM2 14h3v1H2zM1 15h4v1H1zM11 14h3v1h-3zM11 15h4v1h-4z"/><path fill="#ffc68a" d="M7 2h2v1H7zM4 3h1v2H4zM6 3h3v1H6zM10 3h3v1h-3zM7 4h3v1H7zM11 4h3v1h-3zM5 5h4v1H5zM5 6h7v1H5zM2 10h2v1H2zM12 10h2v1h-2zM2 11h3v1H2zM11 11h3v1h-3z"/><path fill="#24252b" d="M9 2h1v2H9zM10 4h1v1h-1zM9 5h4v1H9z"/><path fill="#2870d8" d="M6 7h1v2H6zM9 8h1v1H9zM6 9h4v1H6zM5 10h1v1H5zM7 10h2v1H7zM10 10h1v1h-1zM5 11h6v1H5zM4 12h3v1H4zM9 12h3v1H9zM3 13h3v1H3zM10 13h3v1h-3z"/><path fill="#ffd34e" d="M6 10h1v1H6zM9 10h1v1H9z"/></g>
+  </defs>
+  <use href="#cloud" x="9" y="7"/>
+  <use href="#cloud" x="325" y="5"/>
+  <path fill="#287538" d="M60 68V58h5v-7h8v-5h12v5h8v7h5v10zM273 68V58h6v-5h9v-6h14v6h8v5h6v10z"/>
+  <path fill="#68bb42" d="M62 66v-7h5v-6h8v-5h8v5h8v6h5v7zM275 66v-7h6v-4h9v-6h10v6h8v4h6v7z"/>
+  <path fill="#3d9a38" d="M75 57h3v3h-3zM85 61h3v3h-3zM285 60h3v3h-3zM298 56h3v3h-3z"/>
+  <use href="#question" x="58" y="20"/>
+  <use href="#brick" x="76" y="20"/>
+  <use href="#coin" x="62" y="3"/>
+  <use href="#coin" x="298" y="24"/>
+  <use href="#runner" transform="translate(18 36) scale(2)"/>
+  <path fill="#24252b" d="M329 39h34v10h-3v19h-28V49h-3z"/>
+  <path fill="#3d9a38" d="M331 41h30v6h-30zM334 49h24v19h-24z"/>
+  <path fill="#84d657" d="M333 41h4v6h-4zM336 49h4v19h-4z"/>
+  <path fill="#206735" d="M355 41h6v6h-6zM352 49h6v19h-6z"/>
+  <path fill="#b96835" d="M0 68h380v8H0z"/>
+  <path fill="#24252b" d="M0 68h380v2H0z"/>
+  <path fill="#f2a16b" d="M0 70h380v2H0z"/>
+  <path stroke="#703d28" stroke-width="2" d="M12 72v4m24-4v4m24-4v4m24-4v4m24-4v4m24-4v4m24-4v4m24-4v4m24-4v4m24-4v4m24-4v4m24-4v4m24-4v4m24-4v4m24-4v4m24-4v4"/>
+</svg>

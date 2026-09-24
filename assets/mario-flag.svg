@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="48" viewBox="0 0 24 48" shape-rendering="crispEdges">
+  <title>Level finish flag</title>
+  <path fill="#24252b" d="M5 0h4v2h2v4H9v34H5V6H3V2h2zM2 40h10v2h2v6H0v-6h2z"/>
+  <path fill="#ffd34e" d="M5 2h4v4H5z"/>
+  <path fill="#fff6da" d="M6 6h2v34H6zM9 8h14v2h-2v2h-2v2h-2v2h-2v2h-2v2H9z"/>
+  <path fill="#3d9a38" d="M12 10h5v2h-2v2h-3z"/>
+  <path fill="#b96835" d="M3 42h8v2H3zM2 44h10v3H2z"/>
+  <path fill="#f0a25b" d="M3 42h8v1H3zM2 44h1v3H2z"/>
+</svg>

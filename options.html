@@ -6,203 +6,357 @@
 <title>Joly 下载 · 设置</title>
 <style>
   :root {
-    color-scheme: light dark;
-    --paper: #f6f7f9;
-    --card: #fcfcfd;
-    --ink: #29313d;
-    --ink-dim: #657181;
-    --accent: #486c96;
-    --accent-soft: #eaf0f7;
-    --border: #dfe4eb;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --paper: #22262d;
-      --card: #2b3038;
-      --ink: #e1e5ec;
-      --ink-dim: #a3adbb;
-      --accent: #93b4df;
-      --accent-soft: #354254;
-      --border: #404853;
-    }
+    color-scheme: light;
+    --sky: #6b9bff;
+    --page: #dceaff;
+    --paper: #fff6da;
+    --surface: #fffdf2;
+    --ink: #24252b;
+    --muted: #686150;
+    --line: #d6c59e;
+    --red: #e74730;
+    --gold: #ffd34e;
+    --green: #3d9a38;
+    --brick: #b96835;
+    --off: #b4b3a5;
+    --focus: #194dc2;
+    --display: "Courier New", Courier, monospace;
   }
   * { box-sizing: border-box; }
   body {
     margin: 0;
     min-width: 0;
-    background: var(--paper);
+    background: var(--page);
     color: var(--ink);
-    font: 13px/1.6 -apple-system, BlinkMacSystemFont, "SF Pro Text", "PingFang SC",
-          "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+    font: 13px/1.6 -apple-system, BlinkMacSystemFont, "PingFang SC",
+          "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
   }
-  ::selection { background: var(--accent-soft); color: var(--ink); }
-
-  .band {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 40px 24px 0;
-  }
-  .band-in {
-    display: flex;
-    align-items: baseline;
-    flex-wrap: wrap;
-    gap: 4px 12px;
-  }
-  .band h1 {
-    margin: 0;
-    color: var(--ink);
-    font-size: 22px;
-    font-weight: 650;
-    line-height: 1.35;
-    letter-spacing: -0.3px;
-  }
-  .band .sub {
-    font-size: 12px;
-    color: var(--ink-dim);
-  }
-
-  main { max-width: 600px; margin: 0 auto; padding: 16px 24px 48px; }
-  .lead { color: var(--ink-dim); margin: 0 0 24px; }
-
-  .card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
+  ::selection { background: var(--gold); color: #24252b; }
+  .game-shell { max-width: 720px; margin: 44px auto; padding: 0 24px; }
+  .scene {
+    position: relative;
+    min-height: 238px;
     overflow: hidden;
+    border: 3px solid #24252b;
+    border-bottom: 0;
+    background: var(--sky);
+    color: #fff6da;
   }
+  .hud {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 17px 23px 0;
+    font: 700 11px/1.4 var(--display);
+    letter-spacing: 1.4px;
+    text-shadow: 1px 1px #24252b;
+  }
+  .hud-status { display: inline-flex; align-items: center; gap: 7px; }
+  .coin {
+    width: 8px;
+    height: 12px;
+    border: 2px solid #ffd34e;
+    background: #b96835;
+    box-shadow: 2px 0 #24252b;
+  }
+  .scene-copy { position: relative; z-index: 1; padding: 24px 24px 95px; }
+  .scene h1 {
+    margin: 0;
+    font: 900 clamp(26px, 5vw, 36px)/1 var(--display);
+    letter-spacing: -1.4px;
+    text-shadow: 3px 3px #24252b;
+  }
+  .scene p { margin: 10px 0 0; font-size: 14px; font-weight: 600; text-shadow: 1px 1px #24252b; }
+  .world {
+    position: absolute;
+    inset: auto 0 0;
+    width: 100%;
+    height: 108px;
+    object-fit: cover;
+    object-position: center bottom;
+    image-rendering: pixelated;
+    pointer-events: none;
+  }
+  .runner {
+    position: absolute;
+    right: 74px;
+    bottom: 17px;
+    width: 52px;
+    height: 64px;
+    object-fit: contain;
+    image-rendering: pixelated;
+    pointer-events: none;
+  }
+  .question-block {
+    position: absolute;
+    top: 79px;
+    right: 65px;
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border: 3px solid #24252b;
+    background: #ffd34e;
+    color: #fff6da;
+    box-shadow: inset 3px 3px #ffe990, inset -3px -3px #c58628, 3px 3px #24252b;
+    font: 900 30px/1 var(--display);
+    text-shadow: 2px 2px #b96835;
+  }
+  .console {
+    position: relative;
+    border: 3px solid #24252b;
+    background: var(--paper);
+    box-shadow: 6px 6px #24252b;
+  }
+  .console-intro {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px 14px;
+    padding: 20px 24px 17px;
+    border-bottom: 2px solid var(--line);
+  }
+  .console-intro h2 { margin: 0; font-size: 17px; font-weight: 800; }
+  .console-intro p { margin: 0; color: var(--muted); font-size: 12px; }
+  .settings-section { margin: 23px 24px 0; }
+  .section-heading { display: flex; align-items: center; gap: 9px; margin: 0 0 12px; }
+  .section-heading h3 { margin: 0; font-size: 13px; font-weight: 800; }
+  .section-heading .caption { margin-left: auto; color: var(--muted); font: 700 10px/1.4 var(--display); letter-spacing: 1px; }
+  .section-symbol {
+    display: grid;
+    place-items: center;
+    flex: 0 0 22px;
+    width: 22px;
+    height: 22px;
+    border: 2px solid #24252b;
+    background: var(--red);
+    box-shadow: 2px 2px #24252b;
+    color: #fff6da;
+    font: 900 13px/1 var(--display);
+  }
+  .section-symbol.pipe { background: var(--green); }
+  .section-symbol svg { width: 14px; height: 14px; fill: currentColor; }
+  .card { border: 2px solid var(--ink); background: var(--surface); }
   .item {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
-    gap: 20px;
-    padding: 20px;
+    gap: 24px;
+    padding: 19px 18px;
   }
-  .item + .item { border-top: 1px solid var(--border); }
+  .item + .item { border-top: 1px dashed var(--line); }
   .txt { min-width: 0; }
-  .txt b { display: block; font-size: 13px; font-weight: 600; }
-  .txt span { display: block; color: var(--ink-dim); font-size: 12px; margin-top: 4px; }
-
+  .txt b { display: block; font-size: 13px; font-weight: 750; }
+  .txt .description { display: block; color: var(--muted); font-size: 12px; margin-top: 4px; }
   select {
-    font: inherit;
-    color: var(--ink);
-    background: var(--paper);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 8px 12px;
-    min-width: 124px;
+    min-width: 122px;
     max-width: 100%;
     min-height: 38px;
+    padding: 8px 10px;
+    border: 2px solid #24252b;
+    border-radius: 0;
+    background: var(--gold);
+    color: #24252b;
+    box-shadow: 3px 3px #24252b;
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.5;
     cursor: pointer;
+    transition: transform 120ms steps(2), box-shadow 120ms steps(2);
   }
-  select:hover { border-color: var(--accent); }
-  select:focus-visible,
-  input[type="checkbox"]:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 3px;
+  select:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px #24252b; }
+  select:active { transform: translate(2px, 2px); box-shadow: 1px 1px #24252b; }
+  select:focus-visible { outline: 3px solid var(--focus); outline-offset: 5px; }
+  .notification-item { cursor: pointer; }
+  .notification-item:hover { background: var(--paper); }
+  .switch { position: relative; display: block; flex: 0 0 auto; width: 62px; height: 30px; }
+  .switch input { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+  .switch-track {
+    position: absolute;
+    inset: 0;
+    border: 2px solid #24252b;
+    background: var(--off);
+    box-shadow: 2px 2px #24252b;
   }
-  input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    margin: 0;
-    accent-color: var(--accent);
-    cursor: pointer;
+  .switch-track::before {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #24252b;
+    background: #fff6da;
+    content: "";
+    transition: transform 120ms steps(3);
   }
-
-  .hint { color: var(--ink-dim); font-size: 12px; margin: 12px 2px 0; min-height: 20px; }
-
+  .switch-track::after { position: absolute; right: 3px; top: 7px; color: #24252b; font: 700 9px/1 var(--display); content: "OFF"; }
+  .switch input:checked + .switch-track { background: var(--green); }
+  .switch input:checked + .switch-track::before { transform: translateX(32px); background: var(--gold); }
+  .switch input:checked + .switch-track::after { left: 5px; right: auto; color: #fff6da; content: "ON"; }
+  .switch input:focus-visible + .switch-track { outline: 3px solid var(--focus); outline-offset: 5px; }
+  .hint { min-height: 24px; margin: 15px 24px 5px; color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
   .about {
     display: flex;
     align-items: center;
     flex-wrap: wrap;
     gap: 8px;
-    margin: 24px 2px 0;
-    padding-top: 16px;
-    border-top: 1px solid var(--border);
-    color: var(--ink-dim);
-    font-size: 12px;
+    padding: 13px 24px;
+    border-top: 2px solid var(--ink);
+    background: var(--ink);
+    color: var(--paper);
+    font: 700 11px/1.5 var(--display);
+    letter-spacing: .5px;
   }
-  .about .brand { font-weight: 600; font-size: 13px; color: var(--ink-dim); }
-  .about .ver {
-    color: var(--ink-dim);
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 1px 6px;
-    font-size: 11px;
-    font-variant-numeric: tabular-nums;
-  }
+  .about .brand { margin-right: auto; }
+  .about .ver { color: var(--gold); font-variant-numeric: tabular-nums; }
   .about .ver:empty { display: none; }
-
+  .ground {
+    height: 13px;
+    margin: 0 3px;
+    border: 2px solid #24252b;
+    border-top: 0;
+    background-color: var(--brick);
+    background-image: linear-gradient(90deg, transparent 23px, #24252b 23px, #24252b 25px);
+    background-size: 25px 100%;
+    box-shadow: 6px 6px #24252b;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: dark;
+      --sky: #192452;
+      --page: #11172b;
+      --paper: #272b3c;
+      --surface: #202433;
+      --ink: #f8efd8;
+      --muted: #b8b5b3;
+      --line: #515468;
+      --off: #8e91a0;
+      --focus: #ffd34e;
+    }
+    .scene { border-color: #050810; }
+    .world { filter: brightness(.72) saturate(.8); }
+    .console { border-color: #050810; box-shadow: 6px 6px #050810; }
+    .card { border-color: #515468; }
+    .about { border-color: #050810; background: #141927; color: #fff6da; }
+  }
   @media (max-width: 480px) {
-    .band { padding: 28px 16px 0; }
-    main { padding: 16px 16px 32px; }
-    .item { padding: 18px 16px; gap: 12px; }
-    .item:has(select) { grid-template-columns: minmax(0, 1fr); }
+    .game-shell { margin: 20px auto; padding: 0 16px; }
+    .scene { min-height: 223px; }
+    .hud { padding: 14px 16px 0; font-size: 9px; letter-spacing: 1px; }
+    .scene-copy { padding: 28px 16px 98px; }
+    .scene p { font-size: 12px; }
+    .question-block { top: 111px; right: 34px; width: 30px; height: 30px; font-size: 22px; }
+    .runner { right: 30px; width: 42px; height: 52px; }
+    .console-intro { padding: 18px 16px 15px; }
+    .settings-section { margin: 20px 14px 0; }
+    .item { padding: 17px 13px; gap: 16px; }
+    .item:has(select) { grid-template-columns: minmax(0, 1fr); gap: 12px; }
     select { width: 100%; }
+    .section-heading .caption { font-size: 9px; letter-spacing: 0; }
+    .hint { margin: 14px 16px 5px; }
+    .about { padding: 13px 16px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { transition: none !important; }
   }
 </style>
 </head>
 <body>
-<header class="band">
-  <div class="band-in">
-    <h1>Joly 下载</h1>
-    <span class="sub">Chrome 下载管理扩展</span>
-  </div>
-</header>
+<div class="game-shell">
+  <header class="scene">
+    <div class="hud" aria-hidden="true">
+      <span>JOLY DOWNLOAD</span>
+      <span class="hud-status"><span class="coin"></span>OPTIONS</span>
+    </div>
+    <div class="scene-copy">
+      <h1>PLAYER SETTINGS</h1>
+      <p>你的下载，你的游戏规则。</p>
+    </div>
+    <img class="world" src="assets/mario-world.svg" alt="">
+    <img class="runner" src="assets/mario-runner.svg" alt="">
+    <span class="question-block" aria-hidden="true">?</span>
+  </header>
 
-<main>
-  <p class="lead">所有设置即时保存，无需手动确认。</p>
-
-  <div class="card">
-    <div class="item">
-      <div class="txt">
-        <b id="groupModeLabel">列表分组方式</b>
-        <span>弹出窗下载列表默认按什么维度分组</span>
-      </div>
-      <select id="groupMode" aria-labelledby="groupModeLabel">
-        <option value="date">按日期</option>
-        <option value="type">按类型</option>
-        <option value="none">不分组</option>
-      </select>
+  <main class="console">
+    <div class="console-intro">
+      <h2>下载设置</h2>
+      <p>设置即时保存，无需手动确认。</p>
     </div>
 
-    <div class="item">
-      <div class="txt">
-        <b id="listLimitLabel">列表最多显示条数</b>
-        <span>数值越小内存占用越低，直接影响扩展的内存预算</span>
+    <section class="settings-section" aria-labelledby="listSettingsHeading">
+      <div class="section-heading">
+        <span class="section-symbol" aria-hidden="true">≡</span>
+        <h3 id="listSettingsHeading">列表规则</h3>
+        <span class="caption" aria-hidden="true">SELECT YOUR STYLE</span>
       </div>
-      <select id="listLimit" aria-labelledby="listLimitLabel">
-        <option value="100">100 条</option>
-        <option value="200">200 条</option>
-        <option value="500">500 条</option>
-      </select>
-    </div>
-
-    <div class="item">
-      <div class="txt">
-        <b id="notifyOnCompleteLabel">下载完成通知</b>
-        <span>文件下载完成后弹出系统通知；点击通知可在文件夹中定位该文件</span>
+      <div class="card">
+        <div class="item">
+          <div class="txt">
+            <b id="groupModeLabel">列表分组方式</b>
+            <span class="description" id="groupModeDescription">弹出窗下载列表默认按什么维度分组</span>
+          </div>
+          <select id="groupMode" aria-labelledby="groupModeLabel" aria-describedby="groupModeDescription">
+            <option value="date">按日期</option>
+            <option value="type">按类型</option>
+            <option value="none">不分组</option>
+          </select>
+        </div>
+        <div class="item">
+          <div class="txt">
+            <b id="listLimitLabel">列表最多显示条数</b>
+            <span class="description" id="listLimitDescription">数值越小，扩展占用的内存越少</span>
+          </div>
+          <select id="listLimit" aria-labelledby="listLimitLabel" aria-describedby="listLimitDescription">
+            <option value="100">100 条</option>
+            <option value="200">200 条</option>
+            <option value="500">500 条</option>
+          </select>
+        </div>
       </div>
-      <input type="checkbox" id="notifyOnComplete" aria-labelledby="notifyOnCompleteLabel">
-    </div>
+    </section>
 
-    <div class="item">
-      <div class="txt">
-        <b id="notifyOnFailLabel">下载失败通知</b>
-        <span>下载失败时弹出系统通知（自己主动取消的下载不会通知）</span>
+    <section class="settings-section" aria-labelledby="notificationSettingsHeading">
+      <div class="section-heading">
+        <span class="section-symbol pipe" aria-hidden="true"><svg viewBox="0 0 14 14"><path d="M2 1h10v4h-1v8H3V5H2zm2 4v6h2V5z"/></svg></span>
+        <h3 id="notificationSettingsHeading">通知开关</h3>
+        <span class="caption" aria-hidden="true">POWER ON / OFF</span>
       </div>
-      <input type="checkbox" id="notifyOnFail" aria-labelledby="notifyOnFailLabel">
-    </div>
-  </div>
+      <div class="card">
+        <label class="item notification-item">
+          <span class="txt">
+            <b id="notifyOnCompleteLabel">下载完成通知</b>
+            <span class="description" id="notifyOnCompleteDescription">文件下载完成后弹出系统通知；点击通知可在文件夹中定位该文件</span>
+          </span>
+          <span class="switch">
+            <input type="checkbox" id="notifyOnComplete" aria-labelledby="notifyOnCompleteLabel" aria-describedby="notifyOnCompleteDescription">
+            <span class="switch-track" aria-hidden="true"></span>
+          </span>
+        </label>
+        <label class="item notification-item">
+          <span class="txt">
+            <b id="notifyOnFailLabel">下载失败通知</b>
+            <span class="description" id="notifyOnFailDescription">下载失败时弹出系统通知，主动取消的下载不会通知</span>
+          </span>
+          <span class="switch">
+            <input type="checkbox" id="notifyOnFail" aria-labelledby="notifyOnFailLabel" aria-describedby="notifyOnFailDescription">
+            <span class="switch-track" aria-hidden="true"></span>
+          </span>
+        </label>
+      </div>
+    </section>
 
-  <p class="hint" id="hint"></p>
-
-  <footer class="about">
-    <span class="brand">Joly 下载</span>
-    <span class="ver" id="ver"></span>
-  </footer>
-</main>
+    <p class="hint" id="hint" role="status" aria-live="polite"></p>
+    <footer class="about">
+      <span class="brand">JOLY DOWNLOAD</span>
+      <span class="ver" id="ver"></span>
+    </footer>
+  </main>
+  <div class="ground" aria-hidden="true"></div>
+</div>
 <script src="options.js"></script>
 </body>
 </html>

@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """扩展图标生成器（开发期工具，非运行时依赖）。
-纯标准库手写 PNG 编码 + 4x 超采样抗锯齿。
+纯标准库手写 PNG 编码；以 16px 像素网格等比放大，保持清晰硬边。
 
-图形 = Joly 的 J 字母回钩 + 向下落入的青绿笔画，透明背景。
-箭头形切口融入字母结构，宽笔画与留白兼顾 16px 工具栏辨识度。
+图形 = 戴红帽的金色 J 方块，呼应超级玛丽主题与 Joly 品牌。
 用法：python3 tools/gen-icons.py
 """
 import os
@@ -43,73 +42,44 @@ def encode_png(width, height, rgba):
     )
 
 
-def append_curve(points, control1, control2, end):
-    """用三次贝塞尔曲线构造字母回钩；超采样负责最终边缘抗锯齿。"""
-    start = points[-1]
-    for step in range(1, 13):
-        t = step / 12
-        u = 1 - t
-        points.append(tuple(
-            u ** 3 * start[k] + 3 * u * u * t * control1[k]
-            + 3 * u * t * t * control2[k] + t ** 3 * end[k]
-            for k in (0, 1)
-        ))
+PALETTE = {
+    ".": (0, 0, 0, 0),
+    "K": (36, 37, 43, 255),
+    "R": (231, 71, 48, 255),
+    "D": (179, 49, 37, 255),
+    "Y": (255, 211, 78, 255),
+    "S": (211, 141, 44, 255),
+    "W": (255, 246, 218, 255),
+}
 
-
-def in_polygon(x, y, points):
-    inside = False
-    x0, y0 = points[-1]
-    for x1, y1 in points:
-        if (y0 > y) != (y1 > y) and x < (x1 - x0) * (y - y0) / (y1 - y0) + x0:
-            inside = not inside
-        x0, y0 = x1, y1
-    return inside
-
-
-def logo_layers():
-    head = [(0.64, 0.12), (0.84, 0.12), (0.84, 0.35), (0.74, 0.46), (0.64, 0.35)]
-    body = [(0.64, 0.44), (0.74, 0.55), (0.84, 0.44), (0.84, 0.60)]
-    append_curve(body, (0.84, 0.80), (0.70, 0.92), (0.49, 0.92))
-    append_curve(body, (0.29, 0.92), (0.14, 0.79), (0.14, 0.60))
-    body.extend([(0.33, 0.55), (0.33, 0.60)])
-    append_curve(body, (0.33, 0.68), (0.39, 0.73), (0.49, 0.73))
-    append_curve(body, (0.59, 0.73), (0.64, 0.68), (0.64, 0.59))
-    layers = []
-    for points, color in ((head, (70, 151, 158)), (body, (91, 118, 177))):
-        xs, ys = zip(*points)
-        layers.append((points, color, (min(xs), min(ys), max(xs), max(ys))))
-    return layers
+# 红帽沿和高反差 J 在最小工具栏尺寸下仍独立成形。
+PIXELS = (
+    ".....KKKKKK.....",
+    "....KRRRRRRK....",
+    "....KRWRRRRK....",
+    "..KKKRRRRRRKKK..",
+    ".KRRRRRRRRRRRRK.",
+    ".KDDDDDDDDDDDDK.",
+    "..KYYYYYYYYYSK..",
+    "..KYWWWWWWYYSK..",
+    "..KYYYYWWYYYSK..",
+    "..KYYYYWWYYYSK..",
+    "..KYWWYWWYYYSK..",
+    "..KYWWYWWYYYSK..",
+    "..KYYWWWWYYYSK..",
+    "..KYYYYYYYYYSK..",
+    "..KSSSSSSSSSSK..",
+    "...KKKKKKKKKK...",
+)
 
 
 def draw_icon(size):
-    SS = 4
     rgba = bytearray(size * size * 4)
-
-    layers = logo_layers()
-
     for py in range(size):
         for px in range(size):
-            color_sum = [0, 0, 0]
-            glyph_count = 0
-            for sy in range(SS):
-                for sx in range(SS):
-                    x = (px + (sx + 0.5) / SS) / size
-                    y = (py + (sy + 0.5) / SS) / size
-                    for points, color, (x0, y0, x1, y1) in layers:
-                        if x0 <= x <= x1 and y0 <= y <= y1 and in_polygon(x, y, points):
-                            glyph_count += 1
-                            for channel in range(3):
-                                color_sum[channel] += color[channel]
-                            break
-
-            i = (py * size + px) * 4
-            if glyph_count == 0:
-                continue
-
-            for channel in range(3):
-                rgba[i + channel] = int(round(color_sum[channel] / glyph_count))
-            rgba[i + 3] = int(round(glyph_count / (SS * SS) * 255))
-
+            color = PALETTE[PIXELS[py * 16 // size][px * 16 // size]]
+            offset = (py * size + px) * 4
+            rgba[offset : offset + 4] = bytes(color)
     return encode_png(size, size, rgba)
 
 

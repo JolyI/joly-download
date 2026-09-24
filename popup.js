@@ -17,6 +17,7 @@ var DEFAULT_LIMIT = 200;
 var listEl = document.getElementById('list');
 var emptyEl = document.getElementById('empty');
 var emptyTextEl = document.getElementById('empty-text');
+var emptyHintEl = document.getElementById('empty-hint');
 var searchEl = document.getElementById('search');
 var tabsEl = document.getElementById('tabs');
 var clearBtn = document.getElementById('btn-clear');
@@ -25,6 +26,12 @@ var settingsBtn = document.getElementById('btn-settings');
 var delFileEl = document.getElementById('delFile');
 var toastEl = document.getElementById('toast');
 var verEl = document.getElementById('ver');
+var countEls = {
+  all: document.getElementById('count-all'),
+  active: document.getElementById('count-active'),
+  complete: document.getElementById('count-complete'),
+  failed: document.getElementById('count-failed')
+};
 
 /* 版本号只从 manifest 读，避免和 manifest 里写的不一致 */
 verEl.textContent = 'v' + chrome.runtime.getManifest().version;
@@ -38,7 +45,7 @@ var items = [];          // 已加载的下载项（唯一数据副本）
 var filter = 'all';
 var query = '';
 var groupMode = 'date';  // date | type | none
-var delFileMode = false; // 顶部开关：删除时是否连磁盘文件一起删
+var delFileMode = false; // 底部开关：删除时是否连磁盘文件一起删
 var limit = DEFAULT_LIMIT;
 
 var refreshTimer = 0;
@@ -465,9 +472,8 @@ function setDelFileMode(on) {
 }
 
 /* 只更新发生变化的字段，避免无谓的 DOM 写入与样式重算 */
-/* 刚下载完 → 盖一次章。
- * 只在状态【从非完成变为完成】时触发：首次渲染已完成的旧记录不会满屏盖章。 */
-function stampDone(row) {
+/* 刚下载完时弹一次金币；首次载入历史记录不会触发，减少动态效果由 CSS 控制。 */
+function celebrateDone(row) {
   if (row.el.classList.contains('just-done')) return;
   row.el.classList.add('just-done');
   if (row.stampTimer) clearTimeout(row.stampTimer);
@@ -530,8 +536,7 @@ function updateRow(row, it) {
   var state = stuck ? 'stuck' : (dangerPhase(it) || stateOf(it));
   row.el.dataset.state = state;
 
-  /* c.state 未定义 = 这行第一次渲染，此时不盖章，否则打开面板会满屏盖章 */
-  if (state === 'complete' && c.state !== undefined && c.state !== 'complete') stampDone(row);
+  if (state === 'complete' && c.state !== undefined && c.state !== 'complete') celebrateDone(row);
   c.state = state;
 
   /* ---- 状态文字：固定在第一行右侧，永不截断 ---- */
@@ -589,7 +594,7 @@ function updateRow(row, it) {
     var pct = total > 0 ? Math.min(1, received / total) : 0;
     if (!isFinite(pct) || pct < 0) pct = 0;
     if (c.pct !== pct) {
-      /* 由 CSS 横向进度条读取 --p，与百分比使用相同的进度值 */
+      /* 关卡轨道和马里奥位置都读取 --p，与百分比使用相同的进度值。 */
       row.el.style.setProperty('--p', pct.toFixed(4));
       c.pct = pct;
     }
@@ -773,6 +778,7 @@ function renderView(entries) {
         node.el.classList.toggle('is-hero', isHero);
         node.cache.hero = isHero;
       }
+      if (isHero && !node.cache.actsBuilt) buildActions(node);
     }
 
     var el = node.el;
@@ -807,7 +813,23 @@ function scheduleIdle(fn) {
   return setTimeout(fn, 16);
 }
 
+/* 计数使用已加载记录，口径与四个状态筛选一致；搜索时仍保留整体数量。 */
+function updateCounts() {
+  var counts = { all: items.length, active: 0, complete: 0, failed: 0 };
+  for (var i = 0; i < items.length; i++) {
+    var state = stateOf(items[i]);
+    if (state === 'in_progress' || state === 'paused') counts.active++;
+    else if (state === 'complete') counts.complete++;
+    else if (state === 'interrupted') counts.failed++;
+  }
+  for (var key in counts) {
+    var text = String(counts[key]).padStart(2, '0');
+    if (countEls[key].textContent !== text) countEls[key].textContent = text;
+  }
+}
+
 function render() {
+  updateCounts();
   var entries = buildEntries();
   heroKey = pickHero(entries);
   cancelRest();
@@ -823,6 +845,7 @@ function render() {
   emptyEl.hidden = matched > 0;
   if (matched === 0) {
     emptyTextEl.textContent = items.length === 0 ? '还没有下载记录' : '没有匹配的下载';
+    emptyHintEl.textContent = items.length === 0 ? '下一份文件，就是新的冒险。' : '试试其他关键词或切换筛选。';
   }
 
   /* 其余分片：空闲时补齐（keyed 复用，不会重建已有行） */
@@ -1009,7 +1032,7 @@ function runAction(act, id) {
     else if (act === 'resume') p = chrome.downloads.resume(id);
     else if (act === 'cancel') p = chrome.downloads.cancel(id);
     else if (act === 'erase') {
-      /* 是否连磁盘文件一起删，完全由顶部「删除含文件」开关决定 */
+      /* 是否连磁盘文件一起删，完全由底部「删除含文件」开关决定 */
       if (delFileMode) {
         var label = it ? (nameOf(it) || '文件') : '文件';
         var fileGone = false;
@@ -1071,6 +1094,7 @@ tabsEl.addEventListener('click', function (e) {
   var all = tabsEl.querySelectorAll('.tab');
   for (var i = 0; i < all.length; i++) {
     all[i].classList.toggle('is-active', all[i] === btn);
+    all[i].setAttribute('aria-pressed', String(all[i] === btn));
   }
   render();
 });
