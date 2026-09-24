@@ -58,13 +58,31 @@ var TYPE_MAP = {
   app:     ['exe', 'msi', 'app', 'apk', 'deb', 'rpm', 'sh', 'jar']
 };
 
-var TYPE_ICON = {
-  image: 'i-image',
-  video: 'i-video',
-  audio: 'i-audio',
-  doc: 'i-doc',
-  archive: 'i-archive',
-  app: 'i-app'
+/* 图标细分独立于列表分组，避免换图标后改变已有分类和排序。 */
+var FILE_ICON_MAP = {
+  pdf:      ['pdf'],
+  word:     ['doc', 'docx', 'docm', 'dot', 'dotx', 'dotm', 'odt', 'ott', 'rtf', 'pages'],
+  sheet:    ['xls', 'xlsx', 'xlsm', 'xlsb', 'xlt', 'xltx', 'xltm', 'ods', 'ots', 'csv', 'tsv', 'numbers'],
+  slide:    ['ppt', 'pptx', 'pptm', 'pot', 'potx', 'potm', 'pps', 'ppsx', 'ppsm', 'odp', 'otp', 'key'],
+  text:     ['txt', 'text', 'log', 'nfo', 'asc'],
+  markdown: ['md', 'markdown', 'mdown', 'mkd', 'mdx'],
+  code:     ['js', 'jsx', 'mjs', 'cjs', 'tsx', 'py', 'pyw', 'rb', 'java', 'php', 'go', 'rs',
+             'c', 'h', 'cpp', 'cc', 'cxx', 'hpp', 'cs', 'swift', 'kt', 'kts', 'm', 'mm', 'lua', 'r',
+             'sh', 'bash', 'zsh', 'fish', 'bat', 'cmd', 'ps1', 'sql', 'html', 'htm', 'css', 'scss',
+             'sass', 'less', 'json', 'jsonc', 'yaml', 'yml', 'toml', 'xml', 'ini', 'conf', 'config',
+             'cfg', 'env', 'graphql', 'gql', 'vue', 'svelte', 'ipynb'],
+  image:    ['jpg', 'jpeg', 'jfif', 'png', 'apng', 'gif', 'webp', 'bmp', 'avif', 'heic', 'heif',
+             'tif', 'tiff', 'ico', 'icns', 'raw', 'dng'],
+  vector:   ['svg', 'svgz', 'eps'],
+  video:    ['mp4', 'mov', 'mkv', 'avi', 'webm', 'flv', 'wmv', 'vob', 'm4v', 'mpg', 'mpeg',
+             'ts', 'm2ts', 'mts', '3gpp', '3gp', 'ogv'],
+  audio:    ['mp3', 'wav', 'flac', 'aac', 'ogg', 'm4b', 'm4a', 'midi', 'mid', 'aiff', 'aif', 'wma', 'opus'],
+  archive:  ['zip', 'rar', '7z', 'tar', 'gz', 'gzip', 'tgz', 'bz2', 'tbz2', 'xz', 'txz', 'zst', 'zstd', 'cab'],
+  disk:     ['dmg', 'iso', 'img', 'vhd', 'vhdx', 'vdi', 'vmdk'],
+  app:      ['exe', 'msi', 'msix', 'appx', 'app', 'apk', 'aab', 'ipa', 'deb', 'rpm', 'pkg', 'jar', 'appimage'],
+  font:     ['ttf', 'otf', 'woff', 'woff2', 'ttc', 'eot'],
+  design:   ['psd', 'psb', 'ai', 'sketch', 'fig', 'xd', 'afdesign', 'afphoto', 'afpub', 'indd', 'idml'],
+  ebook:    ['epub', 'mobi', 'azw', 'azw3', 'azw4', 'kfx', 'fb2', 'djvu']
 };
 
 var TYPE_ORDER = ['image', 'video', 'audio', 'doc', 'archive', 'app', 'file'];
@@ -179,6 +197,14 @@ function typeOf(name) {
   var e = extOf(name);
   for (var k in TYPE_MAP) {
     if (TYPE_MAP[k].indexOf(e) >= 0) return k;
+  }
+  return 'file';
+}
+
+function fileIconOf(name) {
+  var e = extOf(name);
+  for (var k in FILE_ICON_MAP) {
+    if (FILE_ICON_MAP[k].indexOf(e) >= 0) return k;
   }
   return 'file';
 }
@@ -466,8 +492,13 @@ function updateRow(row, it) {
   var type = typeOf(name);
   if (c.type !== type) {
     row.el.dataset.type = type;
-    r.icBox.replaceChildren(icon(TYPE_ICON[type] || 'i-file'));
     c.type = type;
+  }
+  var fileIcon = fileIconOf(name);
+  if (c.fileIcon !== fileIcon) {
+    row.el.dataset.fileIcon = fileIcon;
+    r.icBox.replaceChildren(icon('i-file-' + fileIcon, 'ic file-icon'));
+    c.fileIcon = fileIcon;
   }
 
   var phase = phaseOf(it);
@@ -558,7 +589,7 @@ function updateRow(row, it) {
     var pct = total > 0 ? Math.min(1, received / total) : 0;
     if (!isFinite(pct) || pct < 0) pct = 0;
     if (c.pct !== pct) {
-      /* 不再画横条：让佛龛里的金箔从底部涌起，涌到的高度就是进度本身 */
+      /* 由 CSS 横向进度条读取 --p，与百分比使用相同的进度值 */
       row.el.style.setProperty('--p', pct.toFixed(4));
       c.pct = pct;
     }
@@ -592,7 +623,7 @@ function updateRow(row, it) {
       c.active = false;
     }
 
-    /* 已完成 → 金箔镀满整龛；失败/取消 → 空龛 */
+    /* 结束后同步进度值；非活跃任务的进度行保持隐藏 */
     var gild = phase === 'complete' ? 1 : 0;
     if (c.gild !== gild) {
       row.el.style.setProperty('--p', gild);

@@ -6,19 +6,34 @@
   <symbol id="i-folder" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></g></symbol>
   <symbol id="i-external" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></g></symbol>
   <symbol id="i-trash" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></g></symbol>
-  <symbol id="i-doc" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6"/><path d="M9 17h4"/></g></symbol>
-  <symbol id="i-image" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></g></symbol>
-  <symbol id="i-video" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m23 7-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></g></symbol>
-  <symbol id="i-archive" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></g></symbol>
-  <symbol id="i-app" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m4 17 6-6-6-6"/><path d="M12 19h8"/></g></symbol>
   <symbol id="i-link" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></symbol>
   <symbol id="i-settings" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></g></symbol>
+<!-- 文件图标：统一浅色底与居中符号，保证在列表的小尺寸下仍可辨认。 -->
+  <symbol id="i-file-tile" viewBox="0 0 24 24"><rect width="24" height="24" rx="6" fill="currentColor" fill-opacity="var(--file-tint)" stroke="none"/></symbol>
+  <symbol id="i-file-pdf" viewBox="0 0 24 24"><use href="#i-file-tile"/><path d="M4.75 14.75v-5.5h1.8a1.5 1.5 0 0 1 0 3h-1.8m5.3 2.5v-5.5h1.45c2.9 0 2.9 5.5 0 5.5Zm6.15 0v-5.5h3.05m-3.05 2.7h2.55" stroke-width="1.3"/></symbol>
+  <symbol id="i-file-word" viewBox="0 0 24 24"><use href="#i-file-tile"/><path d="m5.75 7.5 2.5 9 3.75-8 3.75 8 2.5-9" stroke-width="1.9"/></symbol>
+  <symbol id="i-file-sheet" viewBox="0 0 24 24"><use href="#i-file-tile"/><path d="M7 5.75h10a1.5 1.5 0 0 1 1.5 1.5V10h-13V7.25A1.5 1.5 0 0 1 7 5.75Z" fill="currentColor" fill-opacity=".18" stroke="none"/><rect x="5.5" y="5.75" width="13" height="12.5" rx="1.5"/><path d="M5.5 10h13M5.5 14h13M10 10v8.25" stroke-width="1.4"/></symbol>
+  <symbol id="i-file-slide" viewBox="0 0 24 24"><use href="#i-file-tile"/><path d="M13.25 5.5v5.25h5.25a5.25 5.25 0 0 0-5.25-5.25Z" fill="currentColor" stroke="none"/><path d="M10.5 7a5.75 5.75 0 1 0 6.5 6.5h-6.5Z" fill="currentColor" fill-opacity=".18"/></symbol>
+  <symbol id="i-file-text" viewBox="0 0 24 24"><use href="#i-file-tile"/><path d="M7 7.5h10M7 12h10M7 16.5h6"/></symbol>
+  <symbol id="i-file-markdown" viewBox="0 0 24 24"><use href="#i-file-tile"/><path d="M4.75 15.5v-7l3.5 3.75 3.5-3.75v7M17 8.5v7m-2.5-2.5 2.5 2.5 2.5-2.5"/></symbol>
+  <symbol id="i-file-code" viewBox="0 0 24 24"><use href="#i-file-tile"/><path d="m7.5 8.5-3.5 3.5 3.5 3.5m9-7 3.5 3.5-3.5 3.5M13.5 6.75l-3 10.5"/></symbol>
+  <symbol id="i-file-image" viewBox="0 0 24 24"><use href="#i-file-tile"/><rect x="5.25" y="6" width="13.5" height="12" rx="1.75"/><path d="m5.5 15 3.75-3.75 3.5 3.5 2-2L18.5 16v.25A1.5 1.5 0 0 1 17 17.75H7A1.5 1.5 0 0 1 5.5 16.25Z" fill="currentColor" fill-opacity=".18" stroke="none"/><path d="m5.5 15 3.75-3.75 3.5 3.5 2-2L18.5 16" stroke-width="1.45"/><circle cx="14.5" cy="9.5" r="1.25" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-file-vector" viewBox="0 0 24 24"><use href="#i-file-tile"/><path d="m12 5.25-5.5 8 5.5 5.5 5.5-5.5Zm0 0v6.5"/><circle cx="12" cy="13" r="1.3"/></symbol>
+  <symbol id="i-file-video" viewBox="0 0 24 24"><use href="#i-file-tile"/><rect x="4.75" y="6.25" width="14.5" height="11.5" rx="2"/><path d="m10 9 5 3-5 3Z" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-file-audio" viewBox="0 0 24 24"><use href="#i-file-tile"/><path d="M9.5 16V7.5l7-1.5v8.5M9.5 10.5l7-1.5"/><ellipse cx="7.75" cy="16.25" rx="2.5" ry="2" fill="currentColor" stroke="none"/><ellipse cx="14.75" cy="14.75" rx="2.5" ry="2" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-file-archive" viewBox="0 0 24 24"><use href="#i-file-tile"/><rect x="5.5" y="5.5" width="13" height="13" rx="2"/><path d="M10.5 5.75H12V8h-1.5Zm1.5 2.25h1.5v2.25H12Zm-1.5 2.25H12v2.25h-1.5Z" fill="currentColor" stroke="none"/><rect x="10.5" y="12.5" width="3" height="3.5" rx="1" stroke-width="1.4"/></symbol>
+  <symbol id="i-file-disk" viewBox="0 0 24 24"><use href="#i-file-tile"/><circle cx="12" cy="12" r="6.5"/><circle cx="12" cy="12" r="1.75"/><path d="M8.25 10.5a4 4 0 0 1 2.25-2.25m3 7.5a4 4 0 0 0 2.25-2.25" stroke-width="1.4"/></symbol>
+  <symbol id="i-file-app" viewBox="0 0 24 24"><use href="#i-file-tile"/><rect x="5.5" y="5.5" width="5" height="5" rx="1.2" fill="currentColor" fill-opacity=".18"/><rect x="13.5" y="5.5" width="5" height="5" rx="1.2"/><rect x="5.5" y="13.5" width="5" height="5" rx="1.2"/><rect x="13.5" y="13.5" width="5" height="5" rx="1.2" fill="currentColor" fill-opacity=".18"/></symbol>
+  <symbol id="i-file-font" viewBox="0 0 24 24"><use href="#i-file-tile"/><path d="m4.5 16.5 4-9 4 9m-6.5-3h5M19 11v5.5"/><path d="M19 13.75a2.5 2.75 0 1 1-5 0 2.5 2.75 0 1 1 5 0Z"/></symbol>
+  <symbol id="i-file-design" viewBox="0 0 24 24"><use href="#i-file-tile"/><circle cx="9.25" cy="13.75" r="4.25" fill="currentColor" fill-opacity=".15"/><path d="m14.5 5 5 5-5 5-5-5Z" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-file-ebook" viewBox="0 0 24 24"><use href="#i-file-tile"/><path d="M8 5.5h9.5v13H8a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2ZM6 16.5a2 2 0 0 1 2-2h9.5"/><path d="M11 5.5v6l2-1.5 2 1.5v-6" fill="currentColor" fill-opacity=".18" stroke="none"/></symbol>
+  <symbol id="i-file-file" viewBox="0 0 24 24"><use href="#i-file-tile"/><path d="M8 5.5h6l4 4v7.5a1.5 1.5 0 0 1-1.5 1.5H8a1.5 1.5 0 0 1-1.5-1.5V7A1.5 1.5 0 0 1 8 5.5ZM14 5.5v4h4"/></symbol>
 </svg>
 
 <header class="top">
   <div class="top-main">
-    <h1 class="title">下载</h1>
-    <span class="ver">v1.3.0</span>
+    <h1 class="title">Joly 下载</h1>
+    <span class="ver">v1.4.0</span>
   </div>
   <div class="top-actions">
     <label class="switch"><input type="checkbox"><i class="track"></i><span class="switch-label">删除含文件</span></label>
@@ -38,9 +53,9 @@
 <div class="search-wrap"><input id="search" placeholder="搜索文件名或来源站点"></div>
 
 <main class="list">
-  <div class="group"><span class="g-label">今 天</span><span class="g-count">5</span></div>
-<article class="row" data-type="doc" data-state="complete" data-key="d2" style="--p:1">
-    <span class="ic-box"><svg class="ic"><use href="#i-doc"></use></svg></span>
+  <div class="group"><span class="g-label">今天</span><span class="g-count">4</span></div>
+<article data-file-icon="sheet" class="row" data-type="doc" data-state="complete" data-key="d2" style="--p:1">
+    <span class="ic-box"><svg class="ic file-icon"><use href="#i-file-sheet"></use></svg></span>
     <div class="main">
       <div class="l1"><span class="name">店铺后台批量导出exportChannel.xlsx</span><span class="st">已完成</span></div>
       <div class="l2"><span class="src">xy-yueyang.oss-cn-hangzhou.aliyuncs.com</span><span class="r"><span class="size">15 KB</span><span class="time">16:07</span></span></div>
@@ -48,8 +63,8 @@
     </div>
     <div class="acts"></div>
   </article>
-<article class="row" data-type="app" data-state="danger" data-key="d3" style="--p:0">
-    <span class="ic-box"><svg class="ic"><use href="#i-app"></use></svg></span>
+<article data-file-icon="disk" class="row" data-type="archive" data-state="danger" data-key="d3" style="--p:0">
+    <span class="ic-box"><svg class="ic file-icon"><use href="#i-file-disk"></use></svg></span>
     <div class="main">
       <div class="l1"><span class="name">unknown-setup.dmg</span><span class="st">已拦截</span></div>
       <div class="l2"><span class="src">dl.example.net</span><span class="r"><span class="size">88 MB</span><span class="time">15:40</span></span></div>
@@ -57,17 +72,8 @@
     </div>
     <div class="acts"></div>
   </article>
-<article class="row" data-type="archive" data-state="paused" data-key="d4" style="--p:0.72">
-    <span class="ic-box"><svg class="ic"><use href="#i-archive"></use></svg></span>
-    <div class="main">
-      <div class="l1"><span class="name">source-code.zip</span><span class="st">已暂停</span></div>
-      <div class="l2"><span class="src">github.com</span><span class="r"><span class="size">172 MB / 240 MB</span><span class="time" hidden></span></span></div>
-      <div class="bar-row"><span class="pct">72%</span><span class="rate">—</span><span class="eta">已暂停</span></div>
-    </div>
-    <div class="acts"></div>
-  </article>
-<article class="row" data-type="image" data-state="complete" data-key="d5" style="--p:1">
-    <span class="ic-box"><svg class="ic"><use href="#i-image"></use></svg></span>
+<article data-file-icon="vector" class="row" data-type="image" data-state="complete" data-key="d5" style="--p:1">
+    <span class="ic-box"><svg class="ic file-icon"><use href="#i-file-vector"></use></svg></span>
     <div class="main">
       <div class="l1"><span class="name">ic_jump-link.svg</span><span class="st">已完成</span></div>
       <div class="l2"><span class="src">assets.example.com</span><span class="r"><span class="size">1.1 KB</span><span class="time">14:49</span></span></div>
@@ -80,8 +86,8 @@
       <button data-act="erase"><svg class="ic"><use href="#i-trash"></use></svg></button>
     </div>
   </article>
-<article class="row" data-type="doc" data-state="interrupted" data-key="d6" style="--p:0">
-    <span class="ic-box"><svg class="ic"><use href="#i-doc"></use></svg></span>
+<article data-file-icon="pdf" class="row" data-type="doc" data-state="interrupted" data-key="d6" style="--p:0">
+    <span class="ic-box"><svg class="ic file-icon"><use href="#i-file-pdf"></use></svg></span>
     <div class="main">
       <div class="l1"><span class="name">批量导入物流服务订单确认单17896277.pdf</span><span class="st">已取消</span></div>
       <div class="l2"><span class="src">file.yueyang.xyb2b.com</span><span class="r"><span class="size">4.2 KB</span><span class="time">14:47</span></span></div>

@@ -3,8 +3,8 @@
 """扩展图标生成器（开发期工具，非运行时依赖）。
 纯标准库手写 PNG 编码 + 4x 超采样抗锯齿。
 
-图形 = 敦煌藻井：土红底 + 两道金线方胜箍 + 正中一支向下的箭。
-藻井是窟顶的视觉中心，箭点明"下载"。
+图形 = Joly 的 J 字母回钩 + 向下落入的青绿笔画，透明背景。
+箭头形切口融入字母结构，宽笔画与留白兼顾 16px 工具栏辨识度。
 用法：python3 tools/gen-icons.py
 """
 import os
@@ -43,87 +43,72 @@ def encode_png(width, height, rgba):
     )
 
 
-def in_rounded_rect(x, y, x0, y0, x1, y1, r):
-    if x < x0 or x > x1 or y < y0 or y > y1:
-        return False
-    cx = min(max(x, x0 + r), x1 - r)
-    cy = min(max(y, y0 + r), y1 - r)
-    dx, dy = x - cx, y - cy
-    return dx * dx + dy * dy <= r * r
+def append_curve(points, control1, control2, end):
+    """用三次贝塞尔曲线构造字母回钩；超采样负责最终边缘抗锯齿。"""
+    start = points[-1]
+    for step in range(1, 13):
+        t = step / 12
+        u = 1 - t
+        points.append(tuple(
+            u ** 3 * start[k] + 3 * u * u * t * control1[k]
+            + 3 * u * t * t * control2[k] + t ** 3 * end[k]
+            for k in (0, 1)
+        ))
 
 
-def in_triangle(px, py, ax, ay, bx, by, cx, cy):
-    d1 = (px - bx) * (ay - by) - (ax - bx) * (py - by)
-    d2 = (px - cx) * (by - cy) - (bx - cx) * (py - cy)
-    d3 = (px - ax) * (cy - ay) - (cx - ax) * (py - ay)
-    has_neg = d1 < 0 or d2 < 0 or d3 < 0
-    has_pos = d1 > 0 or d2 > 0 or d3 > 0
-    return not (has_neg and has_pos)
+def in_polygon(x, y, points):
+    inside = False
+    x0, y0 = points[-1]
+    for x1, y1 in points:
+        if (y0 > y) != (y1 > y) and x < (x1 - x0) * (y - y0) / (y1 - y0) + x0:
+            inside = not inside
+        x0, y0 = x1, y1
+    return inside
 
 
-def in_diamond_ring(x, y, cx, cy, r_in, r_out):
-    """方胜（旋转 45° 的正方形）的线箍：到中心的 L1 距离落在 [r_in, r_out]。"""
-    d = abs(x - cx) + abs(y - cy)
-    return r_in <= d <= r_out
-
-
-def lerp(a, b, t):
-    return a + (b - a) * t
+def logo_layers():
+    head = [(0.64, 0.12), (0.84, 0.12), (0.84, 0.35), (0.74, 0.46), (0.64, 0.35)]
+    body = [(0.64, 0.44), (0.74, 0.55), (0.84, 0.44), (0.84, 0.60)]
+    append_curve(body, (0.84, 0.80), (0.70, 0.92), (0.49, 0.92))
+    append_curve(body, (0.29, 0.92), (0.14, 0.79), (0.14, 0.60))
+    body.extend([(0.33, 0.55), (0.33, 0.60)])
+    append_curve(body, (0.33, 0.68), (0.39, 0.73), (0.49, 0.73))
+    append_curve(body, (0.59, 0.73), (0.64, 0.68), (0.64, 0.59))
+    layers = []
+    for points, color in ((head, (70, 151, 158)), (body, (91, 118, 177))):
+        xs, ys = zip(*points)
+        layers.append((points, color, (min(xs), min(ys), max(xs), max(ys))))
+    return layers
 
 
 def draw_icon(size):
     SS = 4
     rgba = bytearray(size * size * 4)
 
-    # 小尺寸上三道箍会糊成一团，48 以上才画第三道
-    if size >= 48:
-        rings = ((0.400, 0.432), (0.296, 0.328), (0.192, 0.224))
-    else:
-        rings = ((0.398, 0.436), (0.288, 0.326))
+    layers = logo_layers()
 
     for py in range(size):
         for px in range(size):
-            bg_count = 0
-            gold_count = 0
+            color_sum = [0, 0, 0]
+            glyph_count = 0
             for sy in range(SS):
                 for sx in range(SS):
                     x = (px + (sx + 0.5) / SS) / size
                     y = (py + (sy + 0.5) / SS) / size
-                    if not in_rounded_rect(x, y, 0.02, 0.02, 0.98, 0.98, 0.225):
-                        continue
-                    bg_count += 1
-
-                    gold = False
-                    for r_in, r_out in rings:
-                        if in_diamond_ring(x, y, 0.5, 0.5, r_in, r_out):
-                            gold = True
+                    for points, color, (x0, y0, x1, y1) in layers:
+                        if x0 <= x <= x1 and y0 <= y <= y1 and in_polygon(x, y, points):
+                            glyph_count += 1
+                            for channel in range(3):
+                                color_sum[channel] += color[channel]
                             break
-                    if not gold:
-                        # 正中一支向下的箭
-                        if in_rounded_rect(x, y, 0.452, 0.30, 0.548, 0.53, 0.03):
-                            gold = True
-                        elif in_triangle(x, y, 0.5, 0.70, 0.35, 0.49, 0.65, 0.49):
-                            gold = True
-                    if gold:
-                        gold_count += 1
 
             i = (py * size + px) * 4
-            if bg_count == 0:
+            if glyph_count == 0:
                 continue
 
-            alpha = bg_count / (SS * SS)
-            gold_ratio = gold_count / bg_count
-            t = (py + 0.5) / size
-
-            # 土红底自上而下渐深，金线是 #e8c46a
-            r = lerp(lerp(142, 111, t), 232, gold_ratio)
-            g = lerp(lerp(58, 42, t), 196, gold_ratio)
-            b = lerp(lerp(32, 20, t), 106, gold_ratio)
-
-            rgba[i] = int(round(r))
-            rgba[i + 1] = int(round(g))
-            rgba[i + 2] = int(round(b))
-            rgba[i + 3] = int(round(alpha * 255))
+            for channel in range(3):
+                rgba[i + channel] = int(round(color_sum[channel] / glyph_count))
+            rgba[i + 3] = int(round(glyph_count / (SS * SS) * 255))
 
     return encode_png(size, size, rgba)
 

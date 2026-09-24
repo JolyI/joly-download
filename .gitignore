@@ -1,4 +1,4 @@
-# 打包产物（tools/ 下用 Chrome 的 --pack-extension 生成）
+# 打包产物（ZIP 安装包及 Chrome 扩展包）
 build/
 dist/
 *.crx
@@ -6,6 +6,7 @@ dist/
 
 # 临时校验目录
 .tmpcheck/
+tools/.file-icons-qa/
 
 # 系统文件
 .DS_Store

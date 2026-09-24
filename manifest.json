@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Joly 下载",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "Joly 下载：用弹出面板查看和管理下载文件，一键在文件夹中显示。",
   "homepage_url": "https://github.com/JolyI/joly-download",
   "minimum_chrome_version": "116",

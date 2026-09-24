@@ -1,14 +1,6 @@
-<!DOCTYPE html>
-<html lang="zh-CN"><head><meta charset="utf-8"><title>Joly 下载 · 预览</title>
-<link rel="stylesheet" href="../popup.css">
-</head><body>
-<svg class="sprite" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-  <symbol id="i-folder" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></g></symbol>
-  <symbol id="i-external" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M10 14 21 3"/></g></symbol>
-  <symbol id="i-trash" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></g></symbol>
-  <symbol id="i-link" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></g></symbol>
-  <symbol id="i-settings" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></g></symbol>
-<!-- 文件图标：统一浅色底与居中符号，保证在列表的小尺寸下仍可辨认。 -->
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Joly 下载 · 文件图标</title><link rel="stylesheet" href="../popup.css"><style>
+html,body{width:600px;height:auto;min-height:420px;overflow:auto}body{padding:24px}.gallery-title{margin:0 0 6px;font-size:20px;font-weight:500}.gallery-note{margin:0 0 22px;color:var(--text-dim);font-size:12px}.icon-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:20px 8px}.sample{text-align:center;min-width:0}.sample .ic-box{width:100%;height:54px;background:transparent;margin-bottom:7px}.sample .file-icon{width:32px;height:32px}.sample span{font-size:11px;color:var(--text-dim)}
+</style></head><body><svg class="sprite" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><!-- 文件图标：统一浅色底与居中符号，保证在列表的小尺寸下仍可辨认。 -->
   <symbol id="i-file-tile" viewBox="0 0 24 24"><rect width="24" height="24" rx="6" fill="currentColor" fill-opacity="var(--file-tint)" stroke="none"/></symbol>
   <symbol id="i-file-pdf" viewBox="0 0 24 24"><use href="#i-file-tile"/><path d="M4.75 14.75v-5.5h1.8a1.5 1.5 0 0 1 0 3h-1.8m5.3 2.5v-5.5h1.45c2.9 0 2.9 5.5 0 5.5Zm6.15 0v-5.5h3.05m-3.05 2.7h2.55" stroke-width="1.3"/></symbol>
   <symbol id="i-file-word" viewBox="0 0 24 24"><use href="#i-file-tile"/><path d="m5.75 7.5 2.5 9 3.75-8 3.75 8 2.5-9" stroke-width="1.9"/></symbol>
@@ -28,39 +20,4 @@
   <symbol id="i-file-design" viewBox="0 0 24 24"><use href="#i-file-tile"/><circle cx="9.25" cy="13.75" r="4.25" fill="currentColor" fill-opacity=".15"/><path d="m14.5 5 5 5-5 5-5-5Z" fill="currentColor" stroke="none"/></symbol>
   <symbol id="i-file-ebook" viewBox="0 0 24 24"><use href="#i-file-tile"/><path d="M8 5.5h9.5v13H8a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2ZM6 16.5a2 2 0 0 1 2-2h9.5"/><path d="M11 5.5v6l2-1.5 2 1.5v-6" fill="currentColor" fill-opacity=".18" stroke="none"/></symbol>
   <symbol id="i-file-file" viewBox="0 0 24 24"><use href="#i-file-tile"/><path d="M8 5.5h6l4 4v7.5a1.5 1.5 0 0 1-1.5 1.5H8a1.5 1.5 0 0 1-1.5-1.5V7A1.5 1.5 0 0 1 8 5.5ZM14 5.5v4h4"/></symbol>
-</svg>
-
-<header class="top">
-  <div class="top-main">
-    <h1 class="title">Joly 下载</h1>
-    <span class="ver">v1.4.0</span>
-  </div>
-  <div class="top-actions">
-    <label class="switch"><input type="checkbox"><i class="track"></i><span class="switch-label">删除含文件</span></label>
-    <button class="txt-btn">按日期</button>
-    <button class="txt-btn">清空</button>
-    <button class="icon-btn"><svg class="ic"><use href="#i-settings"></use></svg></button>
-  </div>
-</header>
-
-<nav class="tabs">
-  <button class="tab is-active">全部</button>
-  <button class="tab">进行中</button>
-  <button class="tab">已完成</button>
-  <button class="tab">失败</button>
-</nav>
-
-<div class="search-wrap"><input id="search" placeholder="搜索文件名或来源站点"></div>
-
-<main class="list"></main>
-
-<div class="empty">
-  <svg class="empty-icon" viewBox="0 0 48 48" aria-hidden="true">
-    <g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M24 7v22m-7-7 7 7 7-7"/>
-      <path d="M10 29v9a3 3 0 0 0 3 3h22a3 3 0 0 0 3-3v-9"/>
-    </g>
-  </svg>
-  <p>还没有下载记录</p>
-</div>
-</body></html>
+</svg><h1 class="gallery-title">Joly 文件图标</h1><p class="gallery-note">按格式区分，让每个文件一眼可认。</p><main class="icon-grid"><div class="sample" data-file-icon="pdf" title="report.pdf"><div class="ic-box"><svg class="ic file-icon"><use href="#i-file-pdf"></use></svg></div><span>PDF</span></div><div class="sample" data-file-icon="word" title="report.docx"><div class="ic-box"><svg class="ic file-icon"><use href="#i-file-word"></use></svg></div><span>Word</span></div><div class="sample" data-file-icon="sheet" title="data.xlsx"><div class="ic-box"><svg class="ic file-icon"><use href="#i-file-sheet"></use></svg></div><span>Excel / CSV</span></div><div class="sample" data-file-icon="slide" title="slides.pptx"><div class="ic-box"><svg class="ic file-icon"><use href="#i-file-slide"></use></svg></div><span>PPT / Key</span></div><div class="sample" data-file-icon="text" title="notes.txt"><div class="ic-box"><svg class="ic file-icon"><use href="#i-file-text"></use></svg></div><span>TXT</span></div><div class="sample" data-file-icon="markdown" title="README.md"><div class="ic-box"><svg class="ic file-icon"><use href="#i-file-markdown"></use></svg></div><span>Markdown</span></div><div class="sample" data-file-icon="code" title="config.json"><div class="ic-box"><svg class="ic file-icon"><use href="#i-file-code"></use></svg></div><span>代码 / JSON</span></div><div class="sample" data-file-icon="image" title="photo.png"><div class="ic-box"><svg class="ic file-icon"><use href="#i-file-image"></use></svg></div><span>图片</span></div><div class="sample" data-file-icon="vector" title="icon.svg"><div class="ic-box"><svg class="ic file-icon"><use href="#i-file-vector"></use></svg></div><span>SVG 矢量</span></div><div class="sample" data-file-icon="video" title="movie.mp4"><div class="ic-box"><svg class="ic file-icon"><use href="#i-file-video"></use></svg></div><span>视频</span></div><div class="sample" data-file-icon="audio" title="song.mp3"><div class="ic-box"><svg class="ic file-icon"><use href="#i-file-audio"></use></svg></div><span>音频</span></div><div class="sample" data-file-icon="archive" title="source.zip"><div class="ic-box"><svg class="ic file-icon"><use href="#i-file-archive"></use></svg></div><span>压缩包</span></div><div class="sample" data-file-icon="disk" title="installer.dmg"><div class="ic-box"><svg class="ic file-icon"><use href="#i-file-disk"></use></svg></div><span>磁盘镜像</span></div><div class="sample" data-file-icon="app" title="setup.exe"><div class="ic-box"><svg class="ic file-icon"><use href="#i-file-app"></use></svg></div><span>安装包</span></div><div class="sample" data-file-icon="font" title="font.woff2"><div class="ic-box"><svg class="ic file-icon"><use href="#i-file-font"></use></svg></div><span>字体</span></div><div class="sample" data-file-icon="design" title="layout.fig"><div class="ic-box"><svg class="ic file-icon"><use href="#i-file-design"></use></svg></div><span>设计文件</span></div><div class="sample" data-file-icon="ebook" title="book.epub"><div class="ic-box"><svg class="ic file-icon"><use href="#i-file-ebook"></use></svg></div><span>电子书</span></div><div class="sample" data-file-icon="file" title="download"><div class="ic-box"><svg class="ic file-icon"><use href="#i-file-file"></use></svg></div><span>其他文件</span></div></main></body></html>
